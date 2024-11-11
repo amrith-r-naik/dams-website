@@ -1,11 +1,7 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// Prisma schema for Dog Adoption System with NextAuth
 
 datasource db {
-  provider = "postgresql"
+  provider = "postgresql" // Or any other database you are using
   url      = env("DATABASE_URL")
 }
 
@@ -13,75 +9,166 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// NextAuth models for authentication
+
+model User {
+  id            Int       @id @default(autoincrement())
+  username      String?   @unique
+  email         String    @unique
+  password      String // Storing password hashes
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[] // One user can have multiple accounts (OAuth)
+  sessions      Session[] // One user can have multiple sessions
+  role          Role      @default(USER)
+
+  // Relations with the app models
+  adopter Adopter? // If the user is an adopter
+  shelter Shelter? // If the user is a shelter staff
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                Int      @id @default(autoincrement())
+  userId            Int
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  sessionToken String   @unique
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+
+  @@unique([identifier, token])
+}
+
+// Custom models for your app
+
+model Shelter {
+  id          Int      @id @default(autoincrement())
+  name        String
+  address     String
+  phoneNumber String
+  dogs        Dog[] // A shelter can have many dogs
+  userId      Int      @unique
+  user        User     @relation(fields: [userId], references: [id]) // Link to User model
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model Dog {
-  dog_id           Int            @id @default(autoincrement())
-  dog_name         String
-  age              Int
-  sex              String
-  description      String?
-  photo            String?
-  status           String
-  intake_date      DateTime
-  medicalHistories MedicalHistory[]
-  adoptions        Adoption[]
-  breed_id         Int
-  breed            Breed          @relation(fields: [breed_id], references: [breed_id])
-  belongs_to       Shelter        @relation(fields: [shelter_id], references: [shelter_id])
-  shelter_id       Int
-}
-
-model Breed {
-  breed_id   Int     @id @default(autoincrement())
-  breed_name String
-  dogs       Dog[]
-}
-
-model MedicalHistory {
-  medical_history_id Int      @id @default(autoincrement())
-  disease_history    String?
-  vaccination_status String
-  dog_id             Int
-  dog                Dog      @relation(fields: [dog_id], references: [dog_id])
+  id        Int        @id @default(autoincrement())
+  name      String
+  breed     String
+  age       Int
+  size      String
+  status    DogStatus
+  imageUrl  String?
+  shelterId Int
+  shelter   Shelter    @relation(fields: [shelterId], references: [id])
+  favorites Favorite[] // A dog can be marked as favorite by many adopters
+  adoptions Adoption[] // A dog can have multiple adoption applications
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Review    Review[]
 }
 
 model Adopter {
-  adopter_id          Int         @id @default(autoincrement())
-  name                String
-  address             String
-  phone_no            String
-  email               String
-  living_situation    String
-  lifestyle           String
-  experience_with_dogs String
-  adoptions           Adoption[]
+  id           Int            @id @default(autoincrement())
+  favorites    Favorite[] // An adopter can have many favorite dogs
+  adoptions    Adoption[] // An adopter can submit multiple adoption applications
+  reviews      Review[] // An adopter can leave multiple reviews
+  userId       Int            @unique
+  user         User           @relation(fields: [userId], references: [id]) // Link to User model
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Notification Notification[]
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  adopterId Int
+  adopter   Adopter  @relation(fields: [adopterId], references: [id])
+  dogId     Int
+  dog       Dog      @relation(fields: [dogId], references: [id])
+  createdAt DateTime @default(now())
 }
 
 model Adoption {
-  adoption_id   Int      @id @default(autoincrement())
-  adaptation_date DateTime
-  dog_id         Int
-  dog            Dog      @relation(fields: [dog_id], references: [dog_id])
-  adopter_id     Int
-  adopter        Adopter  @relation(fields: [adopter_id], references: [adopter_id])
+  id              Int            @id @default(autoincrement())
+  adopterId       Int
+  adopter         Adopter        @relation(fields: [adopterId], references: [id])
+  dogId           Int
+  dog             Dog            @relation(fields: [dogId], references: [id])
+  status          AdoptionStatus
+  applicationForm String
+  updatedAt       DateTime       @updatedAt
+  createdAt       DateTime       @default(now())
 }
 
-model Shelter {
-  shelter_id  Int     @id @default(autoincrement())
-  shelter_name String
-  phone_no    String
-  email       String
-  address     String
-  website     String?
-  dogs        Dog[]
-  staff       Staff[]
+model Review {
+  id         Int      @id @default(autoincrement())
+  content    String
+  adopterId  Int
+  adopter    Adopter  @relation(fields: [adopterId], references: [id])
+  dogId      Int
+  dog        Dog      @relation(fields: [dogId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  isApproved Boolean  @default(false)
 }
 
-model Staff {
-  staff_id  Int     @id @default(autoincrement())
-  name      String
-  email     String
-  username  String
-  password  String
-  shelter_id Int
-  shelter   Shelter @relation(fields: [shelter_id], references: [shelter_id])
+model Notification {
+  id          Int      @id @default(autoincrement())
+  content     String
+  isRead      Boolean  @default(false)
+  recipientId Int
+  recipient   Adopter  @relation(fields: [recipientId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+enum DogStatus {
+  AVAILABLE
+  UNAVAILABLE
+  ADOPTED
+  DECEASED
+}
+
+enum AdoptionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum Role {
+  USER
+  SHELTER_STAFF
+  ADMIN
 }
