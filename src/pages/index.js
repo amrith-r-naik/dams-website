@@ -1,4 +1,5 @@
 import localFont from "next/font/local";
+import { MainNav } from "@/components/main-nav";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -12,5 +13,9 @@ const geistMono = localFont({
 });
 
 export default function Home() {
-  return (<div className={`${geistMono.variable} ${geistSans.variable}`}>Hello</div>);
+  return (
+  <main className={`${geistMono.variable} ${geistSans.variable} w-full h-screen`}>
+    <MainNav className="w-full px-8 py-3 border border-b-border"/>
+  </main>
+  );
 }
