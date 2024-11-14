@@ -32,8 +32,7 @@ const HeroSection = () => {
 					src="/dog_foot_print.png"
 					alt="footprint"
 					fill
-					objectFit="contain"
-					className=""
+					className="object-contain"
 				/>
 			</div>
 		</div>
