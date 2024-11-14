@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
@@ -10,12 +11,14 @@ import { Button } from "./ui/button";
 
 export function MainNav({ className }) {
 	const pathname = usePathname();
-
+	const router = useRouter();
 	return (
 		<div className={`${className} mr-4 hidden md:flex justify-between`}>
 			<Link href="/" className="mr-4 flex items-center space-x-2 lg:mr-6">
 				<Icons.logo className="h-12 w-12" />
-				<span className="hidden font-bold lg:inline-block">FurEver</span>
+				<span className="hidden font-bold lg:inline-block text-xl">
+					FurEver
+				</span>
 			</Link>
 
 			<nav className="flex items-center gap-4 text-sm xl:gap-6">
@@ -71,9 +74,7 @@ export function MainNav({ className }) {
 			{/* Theme toggle button and login button */}
 			<div className="flex gap-2 justify-center">
 				<ThemeToggle />
-				<Link href="/login">
-					<Button>Login</Button>
-				</Link>
+				<Button onClick={() => router.push("/login")}>Login</Button>
 			</div>
 		</div>
 	);

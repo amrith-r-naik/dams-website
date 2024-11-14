@@ -2,69 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
-  :root {
-    --background: 50 100% 96%; /* #FEFAE0 */
-    --foreground: 0 2% 20%; /* #342E2E */
-    --card: 50 94% 89%; /* #FAEDCD */
-    --card-foreground: 0 2% 20%; /* #342E2E */
-    --popover: 50 94% 89%; /* #FAEDCD */
-    --popover-foreground: 0 2% 20%; /* #342E2E */
-    --primary: 30 50% 64%; /* #D4A373 */
-    --primary-foreground: 0 0% 100%; /* White for good contrast */
-    --secondary: 72 20% 80%; /* #CCD5AE */
-    --secondary-foreground: 0 2% 20%; /* #342E2E */
-    --muted: 72 20% 90%; /* Slightly lighter than secondary */
-    --muted-foreground: 0 2% 35%; /* Darker for contrast */
-    --accent: 72 60% 88%; /* #E9EDC9 */
-    --accent-foreground: 0 2% 20%; /* #342E2E */
-    --destructive: 0 60% 60%; /* Muted red for errors */
-    --destructive-foreground: 0 0% 98%; /* Near white */
-    --border: 72 20% 80%; /* #CCD5AE */
-    --input: 72 20% 80%; /* #CCD5AE */
-    --ring: 30 50% 64%; /* Matches primary */
-    --radius: 0.5rem;
-    --chart-1: 45 76% 61%; /* Soft yellow */
-    --chart-2: 145 58% 39%; /* Soft green */
-    --chart-3: 200 37% 24%; /* Slate blue */
-    --chart-4: 30 74% 66%; /* Peach */
-    --chart-5: 15 87% 67%; /* Coral */
-  }
+	:root {
+		--background: 50 100% 96%; /* #FEFAE0 */
+		--foreground: 0 2% 20%; /* #342E2E */
+		--card: 50 94% 89%; /* #FAEDCD */
+		--card-foreground: 0 2% 20%; /* #342E2E */
+		--popover: 50 94% 89%; /* #FAEDCD */
+		--popover-foreground: 0 2% 20%; /* #342E2E */
+		--primary: 30 50% 64%; /* #D4A373 */
+		--primary-foreground: 0 0% 100%; /* White for good contrast */
+		--secondary: 72 20% 80%; /* #CCD5AE */
+		--secondary-foreground: 0 2% 20%; /* #342E2E */
+		--muted: 72 20% 90%; /* Slightly lighter than secondary */
+		--muted-foreground: 0 2% 35%; /* Darker for contrast */
+		--accent: 72 60% 88%; /* #E9EDC9 */
+		--accent-foreground: 0 2% 20%; /* #342E2E */
+		--destructive: 0 60% 60%; /* Muted red for errors */
+		--destructive-foreground: 0 0% 98%; /* Near white */
+		--border: 72 20% 80%; /* #CCD5AE */
+		--input: 72 20% 80%; /* #CCD5AE */
+		--ring: 30 50% 64%; /* Matches primary */
+		--radius: 0.5rem;
+		--chart-1: 45 76% 61%; /* Soft yellow */
+		--chart-2: 145 58% 39%; /* Soft green */
+		--chart-3: 200 37% 24%; /* Slate blue */
+		--chart-4: 30 74% 66%; /* Peach */
+		--chart-5: 15 87% 67%; /* Coral */
+	}
 
-  .dark {
-    --background: 30 20% 10%; /* Deep brown */
-    --foreground: 0 0% 98%; /* Near white */
-    --card: 30 15% 15%; /* Darker brown */
-    --card-foreground: 0 0% 98%; /* Near white */
-    --popover: 30 15% 15%; /* Darker brown */
-    --popover-foreground: 0 0% 98%; /* Near white */
-    --primary: 30 50% 50%; /* Darker muted orange */
-    --primary-foreground: 0 0% 100%; /* White */
-    --secondary: 72 15% 25%; /* Muted olive */
-    --secondary-foreground: 0 0% 98%; /* Near white */
-    --muted: 72 10% 20%; /* Slightly darker olive */
-    --muted-foreground: 72 10% 80%; /* Lighter olive for contrast */
-    --accent: 60 20% 30%; /* Deep muted green */
-    --accent-foreground: 0 0% 98%; /* Near white */
-    --destructive: 0 50% 30%; /* Dark red for errors */
-    --destructive-foreground: 0 85% 95%; /* Light pink */
-    --border: 72 10% 20%; /* Dark olive */
-    --input: 72 10% 20%; /* Dark olive */
-    --ring: 30 50% 50%; /* Matches primary */
-    --chart-1: 200 50% 40%; /* Slate blue */
-    --chart-2: 145 50% 30%; /* Dark green */
-    --chart-3: 30 40% 50%; /* Orange-brown */
-    --chart-4: 280 50% 60%; /* Cool violet */
-    --chart-5: 340 60% 50%; /* Magenta */
-  }
+	.dark {
+		--background: 30 20% 10%; /* Deep brown */
+		--foreground: 0 0% 98%; /* Near white */
+		--card: 30 15% 15%; /* Darker brown */
+		--card-foreground: 0 0% 98%; /* Near white */
+		--popover: 30 15% 15%; /* Darker brown */
+		--popover-foreground: 0 0% 98%; /* Near white */
+		--primary: 30 50% 50%; /* Darker muted orange */
+		--primary-foreground: 0 0% 100%; /* White */
+		--secondary: 72 15% 25%; /* Muted olive */
+		--secondary-foreground: 0 0% 98%; /* Near white */
+		--muted: 72 10% 20%; /* Slightly darker olive */
+		--muted-foreground: 72 10% 80%; /* Lighter olive for contrast */
+		--accent: 60 20% 30%; /* Deep muted green */
+		--accent-foreground: 0 0% 98%; /* Near white */
+		--destructive: 0 50% 30%; /* Dark red for errors */
+		--destructive-foreground: 0 85% 95%; /* Light pink */
+		--border: 72 10% 20%; /* Dark olive */
+		--input: 72 10% 20%; /* Dark olive */
+		--ring: 30 50% 50%; /* Matches primary */
+		--chart-1: 200 50% 40%; /* Slate blue */
+		--chart-2: 145 50% 30%; /* Dark green */
+		--chart-3: 30 40% 50%; /* Orange-brown */
+		--chart-4: 280 50% 60%; /* Cool violet */
+		--chart-5: 340 60% 50%; /* Magenta */
+	}
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+	*  {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
 }
