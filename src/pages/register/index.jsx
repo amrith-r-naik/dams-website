@@ -3,6 +3,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { RegisterAuthForm } from "@/components/register-auth-form";
+import { Icons } from "@/components/icons";
 
 export default function RegisterPage() {
 	return (
@@ -19,28 +20,16 @@ export default function RegisterPage() {
 				</Link>
 				<div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
 					{/* TODO (Trisha) : Add image over here */}
-					<div className="absolute inset-0 bg-red-900" />
+					<div className="absolute inset-0 bg-secondary text-secondary-foreground z-10" />
 					<div className="relative z-20 flex items-center text-lg font-medium">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							className="mr-2 h-6 w-6"
-						>
-							<path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-						</svg>
 						Furever
 					</div>
+					<Icons.logo className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-10 z-0 w-full h-[80%]" />
 					<div className="relative z-20 mt-auto">
 						<blockquote className="space-y-2">
 							<p className="text-lg">
-								&ldquo;This library has saved me countless hours of work and
-								helped me deliver stunning designs to my clients faster than
-								ever before.&rdquo;
+								Adopting one dog won&apos;t change the world, but for that one
+								dog, the world will change forever.
 							</p>
 							<footer className="text-sm">Sofia Davis</footer>
 						</blockquote>
