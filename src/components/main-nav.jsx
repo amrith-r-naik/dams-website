@@ -14,7 +14,7 @@ export function MainNav({className}) {
     <div className={`${className} mr-4 hidden md:flex justify-between`}>
 
       <Link href="/" className="mr-4 flex items-center space-x-2 lg:mr-6">
-        <Icons.logo className="h-6 w-6" />
+        <Icons.logo className="h-12 w-12" />
           <span className="hidden font-bold lg:inline-block">
             FurEver
         </span>
