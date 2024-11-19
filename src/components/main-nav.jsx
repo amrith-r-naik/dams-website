@@ -8,10 +8,23 @@ import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
+import { signOut, useSession } from "next-auth/react";
+import { useState } from "react";
 
 export function MainNav({ className }) {
+	const [isLoading, setIsLoading] = useState(false);
 	const pathname = usePathname();
 	const router = useRouter();
+	const { data: session } = useSession();
+
+	const handleLogout = async (e) => {
+		e.preventDefault();
+		setIsLoading(true);
+		await signOut();
+		setTimeout(() => {
+			setIsLoading(false);
+		}, 3000);
+	};
 	return (
 		<div className={`${className} mr-4 hidden md:flex justify-between`}>
 			<Link href="/" className="mr-4 flex items-center space-x-2 lg:mr-6">
@@ -74,7 +87,13 @@ export function MainNav({ className }) {
 			{/* Theme toggle button and login button */}
 			<div className="flex gap-2 justify-center">
 				<ThemeToggle />
-				<Button onClick={() => router.push("/login")}>Login</Button>
+				{session ? (
+					<Button variant="destructive" onClick={handleLogout}>
+						Logout
+					</Button>
+				) : (
+					<Button onClick={() => router.push("/login")}>Login</Button>
+				)}
 			</div>
 		</div>
 	);
