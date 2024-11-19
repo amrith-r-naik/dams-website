@@ -11,7 +11,7 @@ import { Label } from "./ui/label";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-// TODO (Pranav) : Implement authentication
+// TODO : Implement staff side login
 
 export function RegisterAuthForm({ className, ...props }) {
 	const [isLoading, setIsLoading] = useState(false);
