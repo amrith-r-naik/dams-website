@@ -8,24 +8,29 @@ import { Icons } from "./icons";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 // TODO (Pranav) : Implement authentication
 
 export function LoginAuthForm({ className, ...props }) {
 	const [isLoading, setIsLoading] = useState(false);
 
-	async function onSubmit(event) {
+	const router = useRouter();
+
+	async function handleLogin(event) {
 		event.preventDefault();
 		setIsLoading(true);
-
+		await signIn("google");
 		setTimeout(() => {
 			setIsLoading(false);
+			router.push("/");
 		}, 3000);
 	}
 
 	return (
 		<div className={cn("grid gap-6", className)} {...props}>
-			<Button type="button" variant="" disabled={isLoading}>
+			<Button onClick={handleLogin} variant="" disabled={isLoading}>
 				{isLoading ? (
 					<Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
 				) : (
@@ -43,7 +48,7 @@ export function LoginAuthForm({ className, ...props }) {
 					</span>
 				</div>
 			</div>
-			<form onSubmit={onSubmit}>
+			<form>
 				<div className="grid gap-2">
 					<div className="grid gap-2">
 						<Label className="sr-only" htmlFor="email">
