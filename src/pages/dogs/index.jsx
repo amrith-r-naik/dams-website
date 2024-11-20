@@ -30,19 +30,26 @@ const DogsPage = () => {
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-20 h-full px-4">
 				{dogs.length === 0 && <p>NO DOGS FOUND</p>}
 				{dogs.map((dog) => (
-					<div key={dog.id} className="card bg-white shadow-lg p-4 rounded-lg">
+					<div
+						key={dog.id}
+						className="card bg-card border border-border w-fit h-fit shadow-lg p-4 rounded-lg"
+					>
 						<Image
-							src={dog.imageUrl || "/placeholder-image.png"}
+							src={dog.imageUrl || "/placeholder-image.jpg"}
 							alt={dog.name}
+							width={500}
+							height={500}
 							className="w-full h-48 object-cover rounded-lg mb-4"
 						/>
-						<h2 className="text-xl font-semibold">{dog.name}</h2>
-						<p className="text-gray-700">Breed: {dog.breed}</p>
-						<p className="text-gray-700">Age: {dog.age} years</p>
-						<p className="text-gray-700">Size: {dog.size}</p>
+						<h2 className="text-xl font-semibold text-card-foreground">
+							{dog.name}
+						</h2>
+						<p className="text-card-foreground/50">Breed: {dog.breed}</p>
+						<p className="text-card-foreground/50">Age: {dog.age} years</p>
+						<p className="text-card-foreground/50">Size: {dog.size}</p>
 						<Link
 							href={`/dogs/${dog.id}`}
-							className="text-blue-500 hover:underline mt-2 block"
+							className="text-primary hover:underline mt-2 block"
 						>
 							View More
 						</Link>
