@@ -27,7 +27,7 @@ const DogsPage = () => {
 	return (
 		<main className={`w-full h-screen`}>
 			<MainNav className="w-full px-8 py-3 border-b border-b-border absolute top-0" />
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-20 h-full px-4">
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 pt-24 h-full px-8">
 				{dogs.length === 0 && <p>NO DOGS FOUND</p>}
 				{dogs.map((dog) => (
 					<div

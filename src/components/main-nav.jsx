@@ -47,7 +47,7 @@ export function MainNav({ className }) {
 
 				{/* TODO (Trisha): Change the navigation menus*/}
 				<Link
-					href="/docs/components"
+					href="/dogBreed"
 					className={cn(
 						"transition-colors hover:text-foreground/80",
 						pathname?.startsWith("/docs/components") &&
@@ -56,10 +56,10 @@ export function MainNav({ className }) {
 							: "text-foreground/60"
 					)}
 				>
-					Components
+					Breeds 
 				</Link>
 
-				<Link
+				{/* <Link
 					href="/blocks"
 					className={cn(
 						"transition-colors hover:text-foreground/80",
@@ -69,9 +69,9 @@ export function MainNav({ className }) {
 					)}
 				>
 					Blocks
-				</Link>
+				</Link> */}
 
-				<Link
+				{/* <Link
 					href="/myshelter"
 					className={cn(
 						"transition-colors hover:text-foreground/80",
@@ -81,7 +81,7 @@ export function MainNav({ className }) {
 					)}
 				>
 					My Shelter
-				</Link>
+				</Link> */}
 			</nav>
 
 			{/* Theme toggle button and login button */}
