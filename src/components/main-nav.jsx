@@ -56,7 +56,7 @@ export function MainNav({ className }) {
 							: "text-foreground/60"
 					)}
 				>
-					Breeds 
+					Breeds
 				</Link>
 
 				{/* <Link
@@ -84,7 +84,7 @@ export function MainNav({ className }) {
 				</Link> */}
 			</nav>
 
-			{/* Theme toggle button and login button */}
+			{/* Theme toggle button and signIn button */}
 			<div className="flex gap-2 justify-center">
 				<ThemeToggle />
 				{session ? (
@@ -92,7 +92,7 @@ export function MainNav({ className }) {
 						Logout
 					</Button>
 				) : (
-					<Button onClick={() => router.push("/login")}>Login</Button>
+					<Button onClick={() => router.push("/signIn")}>SignIn</Button>
 				)}
 			</div>
 		</div>
