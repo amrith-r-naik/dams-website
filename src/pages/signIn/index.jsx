@@ -2,14 +2,14 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { LoginAuthForm } from "@/components/login-auth-form";
+import { SignInAuthForm } from "@/components/signIn-auth-form";
 import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 
-export default function LoginRegisterPage() {
+export default function SignInRegisterPage() {
 	const [isLoading, setIsLoading] = useState(false);
 	const { data: session } = useSession();
 	const handleLogout = async (e) => {
@@ -23,31 +23,19 @@ export default function LoginRegisterPage() {
 	return (
 		<>
 			<div className="container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-				{session ? (
-					<Link
-						href="/"
-						className={cn(
-							buttonVariants({ variant: "outline" }),
-							"absolute right-4 top-4 md:right-8 md:top-8 md:py-1"
-						)}
-					>
-						<ArrowLeft />
-						Home
-					</Link>
-				) : (
-					<Link
-						href="/register"
-						className={cn(
-							buttonVariants({ variant: "ghost" }),
-							"absolute right-4 top-4 md:right-8 md:top-8"
-						)}
-					>
-						Register
-					</Link>
-				)}
+				<Link
+					href="/"
+					className={cn(
+						buttonVariants({ variant: "outline" }),
+						"absolute right-4 top-4 md:right-8 md:top-8 md:py-1"
+					)}
+				>
+					<ArrowLeft />
+					Home
+				</Link>
 				<div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
-					{/* TODO (Trisha) : Add image over here */}
-					<div className="absolute inset-0 bg-primary" />
+					{/* TODO (Trisha) : replace the below div with a dog image and little reduced opacity */}
+					<div className="absolute inset-0 bg-secondary z-10" />
 					<Link
 						href={"/"}
 						className="relative z-20 flex items-center text-lg font-medium"
@@ -57,6 +45,7 @@ export default function LoginRegisterPage() {
 							FurEver
 						</span>
 					</Link>
+					<Icons.logo className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-10 z-0 w-full h-[80%]" />
 					<div className="relative z-20 mt-auto">
 						<blockquote className="space-y-2">
 							<p className="text-lg">
@@ -85,13 +74,13 @@ export default function LoginRegisterPage() {
 						<div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
 							<div className="flex flex-col space-y-2 text-center">
 								<h1 className="text-2xl font-semibold tracking-tight">
-									Welcome Back
+									Sign In to FurEver
 								</h1>
 								<p className="text-sm text-muted-foreground">
-									Login using your google account
+									using your google account
 								</p>
 							</div>
-							<LoginAuthForm />
+							<SignInAuthForm />
 						</div>
 					</div>
 				)}
