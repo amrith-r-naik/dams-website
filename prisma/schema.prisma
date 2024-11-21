@@ -84,20 +84,35 @@ model Shelter {
 }
 
 model Dog {
-  id        Int        @id @default(autoincrement())
-  name      String
-  breed     String
-  age       Int
+  id         Int        @id @default(autoincrement())
+  name       String
+  breed      String
+  age        Int
   description String
-  status    DogStatus
-  imageUrl  String?
-  shelterId Int
-  shelter   Shelter    @relation(fields: [shelterId], references: [id])
-  favorites Favorite[] // A dog can be marked as favorite by many adopters
-  adoptions Adoption[] // A dog can have multiple adoption applications
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  Review    Review[]
+  status     DogStatus
+  imageUrl   String?
+  shelterId  Int
+  shelter    Shelter    @relation(fields: [shelterId], references: [id])
+  favorites  Favorite[] // A dog can be marked as favorite by many adopters
+  adoptions  Adoption[] // A dog can have multiple adoption applications
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  Review     Review[]
+  DogBreed   DogBreed?  @relation(fields: [dogBreedId], references: [id])
+  dogBreedId Int?
+}
+
+model DogBreed {
+  id                   Int     @id @default(autoincrement())
+  name                 String  @unique
+  countryOfOrigin      String?
+  furColor             String?
+  height               String?
+  eyeColor             String?
+  longevity            String?
+  characterTraits      String?
+  commonHealthProblems String?
+  dogs                 Dog[]
 }
 
 model Adopter {
