@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 					name: true,
 					breed: true,
 					age: true,
-					size: true,
+					description: true,
 					imageUrl: true,
 				},
 			});
