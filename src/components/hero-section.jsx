@@ -1,8 +1,16 @@
+"use client";
 import React from "react";
-import { Button } from "./ui/button";
+import { Button } from "./ui/button"; // Ensure the Button component exists
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, useGLTF } from "@react-three/drei";
+
+// Component for rendering the 3D Dog Model
+const DogModel = () => {
+  const { scene } = useGLTF("/dog.glb"); // Ensure `dog.glb` is placed in the `public` folder
+  return <primitive object={scene} scale={8} />;
+};
 
 const HeroSection = () => {
 	const router = useRouter();
@@ -26,15 +34,15 @@ const HeroSection = () => {
 					<ArrowRight />
 				</Button>
 			</div>
-			{/* The footprint image goes here */}
+			{/* 3D Dog picture */}
 			<div className="w-1/2 h-[80%] absolute right-0">
-				<Image
-					src="/dog_foot_print.png"
-					alt="footprint"
-					fill
-					className="object-contain"
-				/>
-			</div>
+        <Canvas>
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[2, 2, 5]} />
+          <DogModel />
+          <OrbitControls enableZoom={false}/>
+        </Canvas>
+      </div>
 		</div>
 	);
 };
