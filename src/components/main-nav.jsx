@@ -59,29 +59,19 @@ export function MainNav({ className }) {
 					Breeds
 				</Link>
 
-				{/* <Link
-					href="/blocks"
-					className={cn(
-						"transition-colors hover:text-foreground/80",
-						pathname?.startsWith("/blocks")
-							? "text-foreground"
-							: "text-foreground/60"
-					)}
-				>
-					Blocks
-				</Link> */}
-
-				{/* <Link
-					href="/myshelter"
-					className={cn(
-						"transition-colors hover:text-foreground/80",
-						pathname?.startsWith("/myshelter")
-							? "text-foreground"
-							: "text-foreground/60"
-					)}
-				>
-					My Shelter
-				</Link> */}
+				{session && session.user && session.user.role === "SHELTER_STAFF" && (
+					<Link
+						href="/shelterDashboard"
+						className={cn(
+							"transition-colors hover:text-foreground/80",
+							pathname?.startsWith("/shelterDashboard")
+								? "text-foreground"
+								: "text-foreground/60"
+						)}
+					>
+						Dashboard
+					</Link>
+				)}
 			</nav>
 
 			{/* Theme toggle button and signIn button */}

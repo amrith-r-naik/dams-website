@@ -28,14 +28,16 @@ const DogsPage = () => {
 		<main className={`w-full h-screen`}>
 			<MainNav className="w-full px-8 py-3 border-b border-b-border absolute top-0" />
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 pt-24 px-8">
-				{dogs.length === 0 && <p className="col-span-full text-center">NO DOGS FOUND</p>}
+				{dogs.length === 0 && (
+					<p className="col-span-full text-center">NO DOGS FOUND</p>
+				)}
 				{dogs.map((dog) => (
 					<div
 						key={dog.id}
 						className="card bg-card border border-border shadow-lg p-4 rounded-lg flex flex-col items-center"
 					>
 						<Image
-							src={dog.imageUrl || "/placeholder-image.jpg"}
+							src={dog.imageUrl[0] || "/placeholder-image.jpg"}
 							alt={dog.name}
 							width={500}
 							height={500}
@@ -44,9 +46,13 @@ const DogsPage = () => {
 						<h2 className="text-xl font-semibold text-card-foreground text-center">
 							{dog.name}
 						</h2>
-						<p className="text-card-foreground/50 text-center">Breed: {dog.breed}</p>
-						<p className="text-card-foreground/50 text-center">Age: {dog.age} years</p>
-						<p className="text-card-foreground/50 text-center">Description: {dog.description}</p>
+						<p className="text-card-foreground/50 text-center">Breed:</p>
+						<p className="text-card-foreground/50 text-center">
+							Age: {dog.age} years
+						</p>
+						<p className="text-card-foreground/50 text-center">
+							Description: {dog.description}
+						</p>
 						<Link
 							href={`/dogs/${dog.id}`}
 							className="text-primary hover:underline mt-2 block text-center"
@@ -56,7 +62,6 @@ const DogsPage = () => {
 					</div>
 				))}
 			</div>
-
 		</main>
 	);
 };
