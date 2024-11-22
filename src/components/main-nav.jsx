@@ -26,7 +26,9 @@ export function MainNav({ className }) {
 		}, 3000);
 	};
 	return (
-		<div className={`${className} mr-4 hidden md:flex justify-between`}>
+		<div
+			className={`${className} mr-4 hidden md:flex justify-between relative`}
+		>
 			<Link href="/" className="mr-4 flex items-center space-x-2 lg:mr-6">
 				<Icons.logo className="h-12 w-12" />
 				<span className="hidden font-bold lg:inline-block text-xl">
@@ -56,35 +58,25 @@ export function MainNav({ className }) {
 							: "text-foreground/60"
 					)}
 				>
-					Breeds 
+					Breeds
 				</Link>
 
-				{/* <Link
-					href="/blocks"
-					className={cn(
-						"transition-colors hover:text-foreground/80",
-						pathname?.startsWith("/blocks")
-							? "text-foreground"
-							: "text-foreground/60"
-					)}
-				>
-					Blocks
-				</Link> */}
-
-				{/* <Link
-					href="/myshelter"
-					className={cn(
-						"transition-colors hover:text-foreground/80",
-						pathname?.startsWith("/myshelter")
-							? "text-foreground"
-							: "text-foreground/60"
-					)}
-				>
-					My Shelter
-				</Link> */}
+				{session && session.user && session.user.role === "SHELTER_STAFF" && (
+					<Link
+						href="/shelterDashboard"
+						className={cn(
+							"transition-colors hover:text-foreground/80",
+							pathname?.startsWith("/shelterDashboard")
+								? "text-foreground"
+								: "text-foreground/60"
+						)}
+					>
+						Dashboard
+					</Link>
+				)}
 			</nav>
 
-			{/* Theme toggle button and login button */}
+			{/* Theme toggle button and signIn button */}
 			<div className="flex gap-2 justify-center">
 				<ThemeToggle />
 				{session ? (
@@ -92,7 +84,7 @@ export function MainNav({ className }) {
 						Logout
 					</Button>
 				) : (
-					<Button onClick={() => router.push("/login")}>Login</Button>
+					<Button onClick={() => router.push("/signIn")}>SignIn</Button>
 				)}
 			</div>
 		</div>

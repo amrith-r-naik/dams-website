@@ -8,7 +8,6 @@ export default async function handler(req, res) {
 				select: {
 					id: true,
 					name: true,
-					breed: true,
 					age: true,
 					description: true,
 					imageUrl: true,

@@ -12,6 +12,7 @@ export default async function handler(req, res) {
 					height: true,
 					eyeColor: true,
 					longevity: true,
+					imageUrl: true,
 					characterTraits: true,
 					commonHealthProblems: true,
 				},
