@@ -1,5 +1,6 @@
 import React from "react";
 import localFont from "next/font/local";
+import { MainNav } from "@/components/main-nav";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -14,9 +15,14 @@ const geistMono = localFont({
 
 const Layout = ({ children }) => {
 	return (
-		<main className={`${geistMono.variable} ${geistSans.variable}`}>
-			{children}
-		</main>
+		<>
+			<MainNav className="w-full px-8 py-3 border-b border-b-border" />
+			<main
+				className={`${geistMono.variable} ${geistSans.variable} min-h-[89vh] w-full`}
+			>
+				{children}
+			</main>
+		</>
 	);
 };
 
