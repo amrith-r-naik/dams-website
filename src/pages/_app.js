@@ -7,6 +7,7 @@ export default function App({
 	Component,
 	pageProps: { session, ...pageProps },
 }) {
+	const getLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
 	return (
 		<SessionProvider session={session}>
 			<ThemeProvider
@@ -15,9 +16,7 @@ export default function App({
 				enableSystem
 				disableTransitionOnChange
 			>
-				<Layout>
-					<Component {...pageProps} />
-				</Layout>
+				{getLayout(<Component {...pageProps} />)}
 			</ThemeProvider>
 		</SessionProvider>
 	);
