@@ -24,7 +24,7 @@ export function ThemeToggle() {
 					<span className="sr-only">Toggle theme</span>
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end" className="absolute">
+			<DropdownMenuContent align="end">
 				<DropdownMenuItem onClick={() => setTheme("light")}>
 					Light
 				</DropdownMenuItem>
@@ -38,7 +38,3 @@ export function ThemeToggle() {
 		</DropdownMenu>
 	);
 }
-
-ThemeToggle.getLayout = function getLayout(page) {
-	return page; // Return the page without any layout
-};
