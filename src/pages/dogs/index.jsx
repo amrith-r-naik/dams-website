@@ -35,7 +35,7 @@ const DogsPage = () => {
 						className="card bg-card border border-border shadow-lg p-4 rounded-lg flex flex-col items-center"
 					>
 						<Image
-							src={dog.imageUrl || "/placeholder-image.jpg"}
+							src={dog.imageUrl[0] || "/placeholder-image.jpg"}
 							alt={dog.name}
 							width={500}
 							height={500}
@@ -44,7 +44,7 @@ const DogsPage = () => {
 						<h2 className="text-xl font-semibold text-card-foreground text-center">
 							{dog.name}
 						</h2>
-						<p className="text-card-foreground/50 text-center">Breed: {dog.breed}</p>
+						<p className="text-card-foreground/50 text-center">Breed:{dog.breed.name}</p>
 						<p className="text-card-foreground/50 text-center">Age: {dog.age} years</p>
 						<p className="text-card-foreground/50 text-center">Description: {dog.description}</p>
 						<Link
