@@ -1,5 +1,3 @@
-// Prisma schema for Dog Adoption System with NextAuth
-
 datasource db {
   provider = "postgresql" // Or any other database you are using
   url      = env("DATABASE_URL")
@@ -18,16 +16,19 @@ model User {
   password      String? // Storing password hashes
   emailVerified DateTime?
   image         String?
-  accounts      Account[] // One user can have multiple accounts (OAuth)
-  sessions      Session[] // One user can have multiple sessions
-  role          Role      @default(USER)
 
-  // Relations with the app models
-  adopter Adopter? // If the user is an adopter
-  shelter Shelter? // If the user is a shelter staff
+  accounts Account[] // One user can have multiple accounts (OAuth)
+  sessions Session[] // One user can have multiple sessions
+  role     Role      @default(USER)
+  shelter  Shelter? // If the user is a shelter staff
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  favorites Favorite[] // Adopters can mark dogs as favorites
+  adoptions Adoption[] // Adopters can submit adoption applications
+  reviews   Review[] // Adopters can leave reviews
+
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Notification Notification[]
 }
 
 model Account {
@@ -77,29 +78,28 @@ model Shelter {
   address     String
   phoneNumber String
   dogs        Dog[] // A shelter can have many dogs
-  userId      Int      @unique
-  user        User     @relation(fields: [userId], references: [id]) // Link to User model
+  staffId     Int      @unique
+  staff       User     @relation(fields: [staffId], references: [id]) // Link to User model
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Dog {
-  id         Int        @id @default(autoincrement())
-  name       String
-  breed      String
-  age        Int
-  size       String
-  status     DogStatus
-  imageUrl   String?
-  shelterId  Int
-  shelter    Shelter    @relation(fields: [shelterId], references: [id])
-  favorites  Favorite[] // A dog can be marked as favorite by many adopters
-  adoptions  Adoption[] // A dog can have multiple adoption applications
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  Review     Review[]
-  DogBreed   DogBreed?  @relation(fields: [dogBreedId], references: [id])
-  dogBreedId Int?
+  id          Int        @id @default(autoincrement())
+  name        String
+  age         Int
+  description String
+  status      DogStatus
+  imageUrl    String[]
+  shelterId   Int
+  shelter     Shelter    @relation(fields: [shelterId], references: [id])
+  favorites   Favorite[] // A dog can be marked as favorite by many adopters
+  adoptions   Adoption[] // A dog can have multiple adoption applications
+  reviews     Review[] // Reviews left for the dog
+  breedId     Int?
+  breed       DogBreed?  @relation(fields: [breedId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model DogBreed {
@@ -112,25 +112,14 @@ model DogBreed {
   longevity            String?
   characterTraits      String?
   commonHealthProblems String?
+  imageUrl             String?
   dogs                 Dog[]
-}
-
-model Adopter {
-  id           Int            @id @default(autoincrement())
-  favorites    Favorite[] // An adopter can have many favorite dogs
-  adoptions    Adoption[] // An adopter can submit multiple adoption applications
-  reviews      Review[] // An adopter can leave multiple reviews
-  userId       Int            @unique
-  user         User           @relation(fields: [userId], references: [id]) // Link to User model
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  Notification Notification[]
 }
 
 model Favorite {
   id        Int      @id @default(autoincrement())
-  adopterId Int
-  adopter   Adopter  @relation(fields: [adopterId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
   dogId     Int
   dog       Dog      @relation(fields: [dogId], references: [id])
   createdAt DateTime @default(now())
@@ -138,8 +127,8 @@ model Favorite {
 
 model Adoption {
   id              Int            @id @default(autoincrement())
-  adopterId       Int
-  adopter         Adopter        @relation(fields: [adopterId], references: [id])
+  userId          Int
+  user            User           @relation(fields: [userId], references: [id])
   dogId           Int
   dog             Dog            @relation(fields: [dogId], references: [id])
   status          AdoptionStatus
@@ -151,8 +140,8 @@ model Adoption {
 model Review {
   id         Int      @id @default(autoincrement())
   content    String
-  adopterId  Int
-  adopter    Adopter  @relation(fields: [adopterId], references: [id])
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
   dogId      Int
   dog        Dog      @relation(fields: [dogId], references: [id])
   createdAt  DateTime @default(now())
@@ -165,7 +154,7 @@ model Notification {
   content     String
   isRead      Boolean  @default(false)
   recipientId Int
-  recipient   Adopter  @relation(fields: [recipientId], references: [id])
+  recipient   User     @relation(fields: [recipientId], references: [id])
   createdAt   DateTime @default(now())
 }
 

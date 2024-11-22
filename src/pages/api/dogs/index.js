@@ -3,18 +3,14 @@ import { prisma } from "@/lib/prisma";
 export default async function handler(req, res) {
 	if (req.method === "GET") {
 		try {
-			const dogs = await prisma.dogBreed.findMany({
+			const dogs = await prisma.dog.findMany({
+				where: { status: "AVAILABLE" },
 				select: {
 					id: true,
 					name: true,
-					countryOfOrigin: true,
-					furColor: true,
-					height: true,
-					eyeColor: true,
-					longevity: true,
+					age: true,
+					description: true,
 					imageUrl: true,
-					characterTraits: true,
-					commonHealthProblems: true,
 				},
 			});
 			res.status(200).json(dogs);
