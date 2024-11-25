@@ -18,7 +18,7 @@ const Layout = ({ children }) => {
 		<>
 			<MainNav className="w-full px-8 py-3 border-b border-b-border" />
 			<main
-				className={`${geistMono.variable} ${geistSans.variable} min-h-[89vh] w-full`}
+				className={`${geistMono.variable} ${geistSans.variable} flex min-h-[89vh] w-full`}
 			>
 				{children}
 			</main>
