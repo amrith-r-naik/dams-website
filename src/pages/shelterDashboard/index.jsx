@@ -1,14 +1,13 @@
 import React from "react";
 import withRoleProtection from "@/lib/roleProtection";
-import AddDog from "@/components/add-dog-form";
+import Layout from "./layout";
 
-const shelterDashboard = () => {
-	return (
-		<div>
-			<h1>Shelter Dashboard</h1>
-			<AddDog />
-		</div>
-	);
+export default function ShelterDashboard() {
+	return <p>Hello</p>;
+}
+
+ShelterDashboard.getLayout = function getLayout(page) {
+	return <Layout>{page}</Layout>;
 };
 
-export default withRoleProtection(shelterDashboard, ["SHELTER_STAFF"]);
+// export default withRoleProtection(ShelterDashboard, ["SHELTER_STAFF"]);
