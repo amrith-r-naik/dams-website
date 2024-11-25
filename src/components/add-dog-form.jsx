@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { useEffect } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 
@@ -27,7 +26,7 @@ export default function AddDog() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const response = await fetch("/api/dogs", {
+			const response = await fetch("/api/addDog", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

@@ -20,7 +20,7 @@ export function MainNav({ className }) {
 	const handleLogout = async (e) => {
 		e.preventDefault();
 		setIsLoading(true);
-		await signOut();
+		await signOut({ redirect: "/" });
 		setTimeout(() => {
 			setIsLoading(false);
 		}, 3000);
