@@ -1,7 +1,14 @@
 import React from "react";
-import withRoleProtection from "@/lib/roleProtection";
+import {
+	Card,
+	CardHeader,
+	CardContent,
+	CardFooter,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
@@ -11,7 +18,7 @@ const CreateShelter = () => {
 		name: "",
 		address: "",
 		phoneNumber: "",
-		staffId: "", // staffId is the user who manages the shelter
+		staffId: "",
 	});
 
 	const router = useRouter();
@@ -21,6 +28,7 @@ const CreateShelter = () => {
 		setShelterDetails((prev) => ({
 			...prev,
 			[name]: value,
+			staffId: session.user.id,
 		}));
 	};
 
@@ -35,53 +43,74 @@ const CreateShelter = () => {
 				},
 				body: JSON.stringify(shelterDetails),
 			});
+
 			console.log(response);
-			if (response.status === 200) {
-				// Redirect to another page after successful creation
+			if (response.ok) {
+				console.log("Response:", response);
 				router.push("/shelterDashboard");
 			}
 		} catch (error) {
 			console.error("Error creating shelter", error);
 		}
 	};
+
 	return (
-		<div>
-			<h1>Create Shelter</h1>
-			<form onSubmit={submitShelterDetails}>
-				<input
-					type="text"
-					name="name"
-					value={shelterDetails.name}
-					onChange={handleInputChange}
-					placeholder="Shelter Name"
-					required
-				/>
-				<input
-					type="text"
-					name="address"
-					value={shelterDetails.address}
-					onChange={handleInputChange}
-					placeholder="Address"
-					required
-				/>
-				<input
-					type="text"
-					name="phoneNumber"
-					value={shelterDetails.phoneNumber}
-					onChange={handleInputChange}
-					placeholder="Phone Number"
-					required
-				/>
-				<input
-					type="number"
-					name="staffId"
-					value={shelterDetails.staffId}
-					onChange={handleInputChange}
-					placeholder="Staff ID"
-					required
-				/>
-				<button type="submit">Create Shelter</button>
-			</form>
+		<div className="flex justify-center min-h-full w-full items-center bg-background">
+			<Card className="w-full max-w-lg bg-card">
+				<CardHeader>
+					<h1 className="text-2xl font-semibold text-card-foreground text-center">
+						Create Shelter
+					</h1>
+				</CardHeader>
+				<CardContent>
+					<form onSubmit={submitShelterDetails} className="space-y-4">
+						<div className="flex flex-col space-y-1">
+							<Label htmlFor="name">Shelter Name</Label>
+							<Input
+								id="name"
+								name="name"
+								type="text"
+								value={shelterDetails.name}
+								onChange={handleInputChange}
+								placeholder="Enter shelter name"
+								required
+							/>
+						</div>
+						<div className="flex flex-col space-y-1">
+							<Label htmlFor="address">Address</Label>
+							<Input
+								id="address"
+								name="address"
+								type="text"
+								value={shelterDetails.address}
+								onChange={handleInputChange}
+								placeholder="Enter address"
+								required
+							/>
+						</div>
+						<div className="flex flex-col space-y-1">
+							<Label htmlFor="phoneNumber">Phone Number</Label>
+							<Input
+								id="phoneNumber"
+								name="phoneNumber"
+								type="text"
+								value={shelterDetails.phoneNumber}
+								onChange={handleInputChange}
+								placeholder="Enter phone number"
+								required
+							/>
+						</div>
+						<Button type="submit" className="w-full">
+							Create Shelter
+						</Button>
+					</form>
+				</CardContent>
+				<CardFooter>
+					<p className="text-sm text-muted-foreground">
+						Ensure all fields are correctly filled before submitting.
+					</p>
+				</CardFooter>
+			</Card>
 		</div>
 	);
 };

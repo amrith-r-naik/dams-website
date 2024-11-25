@@ -4,7 +4,6 @@ export default async function handler(req, res) {
 	if (req.method === "POST") {
 		let { name, address, phoneNumber, staffId } = req.body;
 		staffId = parseInt(staffId, 10);
-		console.log(req.body);
 
 		// Validate required fields
 		if (!name || !address || !phoneNumber || !staffId) {
