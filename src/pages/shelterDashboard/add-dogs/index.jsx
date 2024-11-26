@@ -14,14 +14,14 @@ export default function AddDogPage() {
 	const [breeds, setBreeds] = useState([]);
 
 	useEffect(() => {
-		fetch("/api/dogBreeds")
+		fetch("/api/dogBreed")
 			.then((res) => res.json())
 			.then(setBreeds);
 	}, []);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const res = await fetch("/api/manageDog", {
+		const res = await fetch("/api/addDog", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(form),

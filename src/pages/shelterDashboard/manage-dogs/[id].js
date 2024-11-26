@@ -10,10 +10,10 @@ export default function UpdateDogPage() {
 
 	useEffect(() => {
 		if (id) {
-			fetch(`/api/dogs/${id}`)
+			fetch(`/api/manageDog/${id}`)
 				.then((res) => res.json())
 				.then(setDog);
-			fetch("/api/breeds")
+			fetch("/api/dogBreed")
 				.then((res) => res.json())
 				.then(setBreeds);
 		}

@@ -28,6 +28,10 @@ const data = {
 					url: "/shelterDashboard/manage-dogs",
 				},
 				{
+					title: "Add Dogs",
+					url: "/shelterDashboard/add-dogs",
+				},
+				{
 					title: "Shelter Details",
 					url: "/shelterDashboard/shelter-details",
 				},
