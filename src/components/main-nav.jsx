@@ -52,10 +52,7 @@ export function MainNav({ className }) {
 					href="/dogBreed"
 					className={cn(
 						"transition-colors hover:text-foreground/80",
-						pathname?.startsWith("/docs/components") &&
-							!pathname?.startsWith("/docs/component/chart")
-							? "text-foreground"
-							: "text-foreground/60"
+						pathname === "/dogBreed" ? "text-foreground" : "text-foreground/60"
 					)}
 				>
 					Breeds
