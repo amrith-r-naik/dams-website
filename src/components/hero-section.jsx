@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "./ui/button"; // Ensure the Button component exists
 import { ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 

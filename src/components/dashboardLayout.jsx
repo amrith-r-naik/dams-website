@@ -9,6 +9,7 @@ const DashboardLayout = ({ children }) => {
 
 	const navLinks = [
 		{ href: "/shelterDashboard/manage-dogs", label: "Manage Dogs" },
+		{ href: "/shelterDashboard/add-dogs", label: "add Dogs" },
 		{ href: "/shelterDashboard/edit-shelter", label: "Edit Shelter Details" },
 		{
 			href: "/shelterDashboard/view-applications",
