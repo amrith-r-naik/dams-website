@@ -1,11 +1,19 @@
+"use client";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import Image from "next/image";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+	CardFooter,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import ImageSlider from "@/components/image-slider";
+import { ArrowLeft } from "lucide-react";
 
 export async function getServerSideProps(context) {
 	const { id } = context.params;
@@ -61,96 +69,116 @@ export default function DogDetail({ dog }) {
 	};
 
 	return (
-		<div className="min-h-screen bg-muted-foreground p-6 flex flex-col gap-6">
-			{/* Dog Details Card */}
-			<Card className="max-w-5xl mx-auto">
-				<CardHeader>
-					<h1 className="text-2xl font-semibold text-primary">{dog.name}</h1>
+		<div className="relative min-h-full w-full flex justify-center py-10 bg-background">
+			<Card className="flex flex-col bg-card rounded-lg shadow-md">
+				{/* Header Section */}
+				<CardHeader className="text-center border-b border-border p-6">
+					<CardTitle className="text-4xl font-extrabold text-primary">
+						{dog.name}
+					</CardTitle>
 				</CardHeader>
-				<CardContent className="flex flex-col md:flex-row gap-6">
+
+				<CardContent className="flex gap-10 p-8 px-16 items-stretch">
 					{/* Left Section: Image Carousel */}
-					<div className="flex-1">
-						<div className="relative w-full h-96 rounded-lg overflow-hidden">
-							{dog.imageUrl.map((url, index) => (
-								<Image
-									key={index}
-									src={url}
-									alt={`${dog.name} image ${index + 1}`}
-									fill
-									className="rounded-lg object-cover"
-								/>
-							))}
-						</div>
+					<div className="flex items-center w-[40vw] h-full">
+						<ImageSlider imageArray={dog.imageUrl} dog={dog} />
 					</div>
 
 					{/* Right Section: Dog Details */}
-					<div className="flex-2">
-						<h2 className="text-xl font-semibold mb-4 text-secondary">
-							Details
-						</h2>
-						<div className="space-y-2">
+					<div className="flex flex-col justify-evenly">
+						<div className="space-y-3 text-base text-muted-foreground">
+							<h2 className="font-bold text-accent">Details</h2>
 							<p>
-								<strong>Age:</strong> {dog.age}
+								<strong className="text-primary">Age:</strong> {dog.age} Years
 							</p>
 							<p>
-								<strong>Description:</strong> {dog.description}
+								<strong className="text-primary">Description:</strong>{" "}
+								{dog.description}
 							</p>
-							<p>
-								<strong>Status:</strong>{" "}
+							<div>
+								<strong className="text-primary">Status:</strong>{" "}
 								<Badge variant="secondary">{dog.status}</Badge>
-							</p>
+							</div>
 							<p>
-								<strong>Breed:</strong> {dog.breed?.name || "Unknown"}
+								<strong className="text-primary">Breed:</strong>{" "}
+								{dog.breed?.name || "Unknown"}
 							</p>
 						</div>
-						<h3 className="text-lg font-medium mt-6 text-accent">
-							Shelter Information
-						</h3>
-						<div className="space-y-2">
+
+						{/* Shelter Details */}
+						<div className="space-y-3 text-base text-muted-foreground">
+							<h3 className="font-bold text-accent">Shelter Information</h3>
 							<p>
-								<strong>Name:</strong> {dog.shelter?.name}
+								<strong className="text-primary">Name:</strong>{" "}
+								{dog.shelter?.name}
 							</p>
 							<p>
-								<strong>Address:</strong> {dog.shelter?.address}
+								<strong className="text-primary">Address:</strong>{" "}
+								{dog.shelter?.address}
 							</p>
 							<p>
-								<strong>Phone:</strong> {dog.shelter?.phoneNumber}
+								<strong className="text-primary">Phone:</strong>{" "}
+								{dog.shelter?.phoneNumber}
 							</p>
 						</div>
+
+						{/* Adoption Form */}
+						{session ? (
+							<form onSubmit={handleAdoptionSubmit} className="space-y-5 mt-8">
+								<Textarea
+									value={formData.applicationForm}
+									onChange={(e) =>
+										setFormData({
+											...formData,
+											applicationForm: e.target.value,
+										})
+									}
+									placeholder="Why do you want to adopt this dog?"
+									className="w-full text-base rounded-lg placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring p-3"
+									required
+								/>
+								<Button
+									type="submit"
+									className="w-full py-3 font-medium text-base rounded-lg bg-primary text-white hover:bg-primary-dark transition-all duration-300"
+									disabled={isSubmitting}
+								>
+									{isSubmitting ? "Submitting..." : "Submit Application"}
+								</Button>
+							</form>
+						) : (
+							<div className="mt-8 gap-2 text-muted-foreground w-full flex flex-col ">
+								<p className="text-sm text-card-foreground/20">
+									Please sign in to adopt this dog.
+								</p>
+								<Button
+									type="submit"
+									className="w-fit py-3 font-medium text-base rounded-lg bg-primary text-white hover:bg-primary-dark transition-all duration-300"
+									disabled={true}
+								>
+									Apply for Adoption
+								</Button>
+							</div>
+						)}
 					</div>
 				</CardContent>
+
+				<CardFooter className="text-center border-t border-border py-4">
+					<p className="text-sm w-full text-muted-foreground">
+						Adopt responsibly. Ensure you&apos;re ready to provide a loving
+						home.
+					</p>
+				</CardFooter>
 			</Card>
 
-			{/* Adoption Form */}
-			<Card className="max-w-5xl mx-auto">
-				<CardHeader>
-					<h2 className="text-xl font-semibold text-primary">
-						Adopt {dog.name}
-					</h2>
-				</CardHeader>
-				<CardContent>
-					{session ? (
-						<form onSubmit={handleAdoptionSubmit} className="space-y-4">
-							<Textarea
-								value={formData.applicationForm}
-								onChange={(e) =>
-									setFormData({ ...formData, applicationForm: e.target.value })
-								}
-								placeholder="Why do you want to adopt this dog?"
-								className="w-full"
-								required
-							/>
-							<Button type="submit" className="w-full" disabled={isSubmitting}>
-								{isSubmitting ? "Submitting..." : "Submit Application"}
-							</Button>
-						</form>
-					) : (
-						<p className="text-muted">
-							<strong>Please sign in to adopt this dog.</strong>
-						</p>
-					)}
-				</CardContent>
-			</Card>
+			<Button
+				variant="outline"
+				className="absolute rounded-full w-fit h-fit left-10 top-10"
+				onClick={() => {
+					router.back();
+				}}
+			>
+				<ArrowLeft />
+			</Button>
 		</div>
 	);
 }
