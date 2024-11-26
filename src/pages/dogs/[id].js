@@ -1,3 +1,6 @@
+//  pages/dogs/[id].js
+// dogs slug page
+
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -97,7 +100,8 @@ export default function DogDetail({ dog }) {
 							</p>
 							<p>
 								<strong>Status:</strong>{" "}
-								<Badge variant="secondary">{dog.status}</Badge>
+								<Badge variant="secondary">{dog.status}</Badge>{" "}
+								{/* Incorrect */}
 							</p>
 							<p>
 								<strong>Breed:</strong> {dog.breed?.name || "Unknown"}
