@@ -1,33 +1,68 @@
-// /pages/api/dogs/[id].js (Updated handler for PUT)
-
-import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
+import { prisma } from "@/lib/prisma";
+
 export default async function handler(req, res) {
-	if (req.method !== "PUT")
-		return res.status(405).json({ error: "Method not allowed" });
+	const { id } = req.query;
+
+	// Validate ID
+	if (!id || isNaN(id)) {
+		return res.status(400).json({ error: "Invalid ID" });
+	}
 
 	const session = await getServerSession(req, res, authOptions);
+
+	// Ensure user is logged in
 	if (!session || session.user.role !== "SHELTER_STAFF") {
 		return res.status(403).json({ error: "Unauthorized" });
 	}
 
-	const { id } = req.query;
-	const { name, age, description, status, imageUrl, breedId } = req.body;
+	try {
+		// Check if the dog exists and belongs to the current shelter staff
+		const dog = await prisma.dog.findUnique({
+			where: { id: parseInt(id) },
+			include: { shelter: true },
+		});
 
-	const shelter = await prisma.shelter.findUnique({
-		where: { staffId: session.user.id },
-		include: { dogs: true },
-	});
+		if (!dog) {
+			return res.status(404).json({ error: "Dog not found" });
+		}
 
-	if (!shelter || !shelter.dogs.some((dog) => dog.id === parseInt(id))) {
-		return res.status(404).json({ error: "Dog not found in your shelter" });
+		if (dog.shelter.staffId !== session.user.id) {
+			return res
+				.status(403)
+				.json({ error: "You do not have permission to modify this dog" });
+		}
+
+		if (req.method === "PUT") {
+			// Handle status update
+			const { status } = req.body;
+
+			// Validate the status with your enum values
+			const validStatuses = ["AVAILABLE", "UNAVAILABLE", "ADOPTED", "DECEASED"];
+			if (!validStatuses.includes(status)) {
+				return res.status(400).json({ error: "Invalid status value" });
+			}
+
+			const updatedDog = await prisma.dog.update({
+				where: { id: parseInt(id) },
+				data: { status },
+			});
+
+			return res.status(200).json(updatedDog);
+		} else if (req.method === "DELETE") {
+			// Handle dog deletion
+			await prisma.dog.delete({
+				where: { id: parseInt(id) },
+			});
+
+			return res.status(204).end(); // No content, successful deletion
+		} else {
+			// Method not allowed
+			return res.status(405).json({ error: "Method not allowed" });
+		}
+	} catch (error) {
+		console.error("Error handling request:", error);
+		return res.status(500).json({ error: "Internal Server Error" });
 	}
-
-	const updatedDog = await prisma.dog.update({
-		where: { id: parseInt(id) },
-		data: { name, age, description, status, imageUrl, breedId }, // Include breedId
-	});
-
-	return res.status(200).json(updatedDog);
 }
