@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import Layout from "../layout";
 import Loader from "@/components/ui/loader";
@@ -13,8 +14,8 @@ import {
 import { Button } from "@/components/ui/button";
 
 const ShelterPage = () => {
-	const [shelter, setShelter] = useState(null); // Shelter state
-	const [loading, setLoading] = useState(true); // Loading state
+	const [shelter, setShelter] = useState(null); // Shelter is a single object, not an array
+	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null); // Error state
 
 	const router = useRouter();
@@ -27,7 +28,7 @@ const ShelterPage = () => {
 				if (!response.ok)
 					throw new Error(data.error || "Failed to fetch shelter");
 				setShelter(data.shelter);
-			} catch (err) {
+			} catch (error) {
 				console.error("Error fetching shelter:", err);
 				setError(err.message);
 			} finally {
@@ -37,7 +38,6 @@ const ShelterPage = () => {
 
 		fetchShelter();
 	}, []);
-
 	const handleUpdate = async (e) => {
 		e.preventDefault();
 		try {
@@ -54,33 +54,52 @@ const ShelterPage = () => {
 		}
 	};
 
-	if (loading) return <p>Loading...</p>;
+	if (loading)
+		return (
+			<div className="flex w-full items-center justify-center min-h-screen bg-background">
+				<Loader className="w-8 h-8 text-primary animate-spin" />
+			</div>
+		);
 	if (error) return <p>Error: {error}</p>;
-	if (!shelter) return <p>No shelter data available</p>;
+	if (!shelter)
+		return (
+			<div className="flex items-center justify-center min-h-screen bg-background text-muted-foreground">
+				<p>No shelter data available</p>
+			</div>
+		);
 
 	return (
-		<div className="p-8">
-			<form onSubmit={handleUpdate}>
-				<h1>Update Shelter</h1>
-				<input
-					value={shelter.name || ""}
-					onChange={(e) => setShelter({ ...shelter, name: e.target.value })}
-					placeholder="Shelter Name"
-				/>
-				<input
-					value={shelter.address || ""}
-					onChange={(e) => setShelter({ ...shelter, address: e.target.value })}
-					placeholder="Shelter Address"
-				/>
-				<textarea
-					value={shelter.phoneNumber || ""}
-					onChange={(e) =>
-						setShelter({ ...shelter, phoneNumber: e.target.value })
-					}
-					placeholder="Phone Number"
-				/>
-				<button type="submit">Update Shelter</button>
-			</form>
+		<div className="min-h-screen bg-background text-foreground">
+			<div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+				<Card className="bg-card border border-border shadow-xl rounded-lg p-6 mx-auto max-w-lg transition-transform hover:scale-[1.02]">
+					<CardHeader>
+						<CardTitle className="text-2xl font-bold text-card-foreground">
+							{shelter.name}
+						</CardTitle>
+						<CardDescription className="text-sm text-muted-foreground">
+							Address: {shelter.address}
+						</CardDescription>
+					</CardHeader>
+					<CardContent className="space-y-4">
+						<p className="text-card-foreground">
+							<strong>Phone Number:</strong> {shelter.phoneNumber}
+						</p>
+						<p className="text-sm text-muted-foreground">
+							Need help? Contact the shelter for more details.
+						</p>
+					</CardContent>
+					<CardFooter className="mt-6">
+						<Link href={`/shelterDashboard/shelter-details/${shelter.id}`}>
+							<Button
+								variant="primary"
+								className="w-full py-3 text-sm font-medium"
+							>
+								Edit Shelter Details
+							</Button>
+						</Link>
+					</CardFooter>
+				</Card>
+			</div>
 		</div>
 	);
 };
