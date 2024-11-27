@@ -91,6 +91,32 @@ export default async function handler(req, res) {
 			console.error("Error handling shelter API:", error);
 			return res.status(500).json({ error: "Internal server error" });
 		}
+	} else if (req.method === "PUT") {
+		const { id, name, address, phoneNumber } = req.body;
+
+		if (!id) {
+			return res.status(400).json({ error: "Shelter ID is required" });
+		}
+
+		// Build the `data` object dynamically
+		const data = {};
+		if (name) data.name = name;
+		if (address) data.address = address;
+		if (phoneNumber) data.phoneNumber = phoneNumber;
+
+		try {
+			const updatedShelter = await prisma.shelter.update({
+				where: { id: parseInt(id, 10) },
+				data,
+			});
+
+			return res.status(200).json(updatedShelter);
+		} catch (error) {
+			console.error("Error updating shelter:", error);
+			return res
+				.status(500)
+				.json({ error: "Failed to update shelter details" });
+		}
 	} else {
 		// Method not allowed
 		res.setHeader("Allow", ["POST", "GET"]);

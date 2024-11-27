@@ -1,25 +1,25 @@
 import { useEffect, useState } from "react";
-import Link from "next/link";
-
+import { useRouter } from "next/router";
 import Layout from "../layout";
 
 const ShelterPage = () => {
-	const [shelter, setShelter] = useState(null); // Shelter is a single object, not an array
-	const [loading, setLoading] = useState(true);
+	const [shelter, setShelter] = useState(null); // Shelter state
+	const [loading, setLoading] = useState(true); // Loading state
+	const [error, setError] = useState(null); // Error state
+
+	const router = useRouter();
 
 	useEffect(() => {
 		const fetchShelter = async () => {
 			try {
 				const response = await fetch("/api/shelter?current=true");
 				const data = await response.json();
-
-				if (response.ok) {
-					setShelter(data.shelter); // Access the `shelter` key in the API response
-				} else {
-					console.error("Error fetching shelter:", data.error);
-				}
-			} catch (error) {
-				console.error("Error fetching shelter:", error);
+				if (!response.ok)
+					throw new Error(data.error || "Failed to fetch shelter");
+				setShelter(data.shelter);
+			} catch (err) {
+				console.error("Error fetching shelter:", err);
+				setError(err.message);
 			} finally {
 				setLoading(false);
 			}
@@ -28,37 +28,55 @@ const ShelterPage = () => {
 		fetchShelter();
 	}, []);
 
-	if (loading) return <p>Loading...</p>;
+	const handleUpdate = async (e) => {
+		e.preventDefault();
+		try {
+			const res = await fetch(`/api/shelter`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(shelter),
+			});
+			if (!res.ok) throw new Error("Failed to update shelter");
+			alert("Shelter updated successfully!");
+		} catch (error) {
+			console.error("Error updating shelter:", error);
+			alert("Error updating shelter");
+		}
+	};
 
+	if (loading) return <p>Loading...</p>;
+	if (error) return <p>Error: {error}</p>;
 	if (!shelter) return <p>No shelter data available</p>;
 
 	return (
-		<div className="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 p-8">
-			<div
-				key={shelter.id}
-				className="card bg-card border border-border shadow-lg p-4 rounded-lg flex flex-col items-center"
-			>
-				<h2 className="text-xl font-semibold text-card-foreground text-center">
-					{shelter.name}
-				</h2>
-				<p className="text-card-foreground/50 text-center">
-					Address: {shelter.address}
-				</p>
-				<p className="text-card-foreground/50 text-center">
-					Phone Number: {shelter.phoneNumber}
-				</p>
-				<Link
-					href={`/shelterDashboard/shelter-details/${shelter.id}`}
-					className="text-primary hover:underline mt-2 block text-center"
-				>
-					Edit
-				</Link>
-			</div>
+		<div className="p-8">
+			<form onSubmit={handleUpdate}>
+				<h1>Update Shelter</h1>
+				<input
+					value={shelter.name || ""}
+					onChange={(e) => setShelter({ ...shelter, name: e.target.value })}
+					placeholder="Shelter Name"
+				/>
+				<input
+					value={shelter.address || ""}
+					onChange={(e) => setShelter({ ...shelter, address: e.target.value })}
+					placeholder="Shelter Address"
+				/>
+				<textarea
+					value={shelter.phoneNumber || ""}
+					onChange={(e) =>
+						setShelter({ ...shelter, phoneNumber: e.target.value })
+					}
+					placeholder="Phone Number"
+				/>
+				<button type="submit">Update Shelter</button>
+			</form>
 		</div>
 	);
 };
 
 export default ShelterPage;
+
 ShelterPage.getLayout = function getLayout(page) {
 	return <Layout>{page}</Layout>;
 };
