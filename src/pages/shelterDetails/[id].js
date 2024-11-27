@@ -13,7 +13,7 @@ const ShelterDetailsPage = () => {
 
 		const fetchShelterDetails = async () => {
 			try {
-				const response = await fetch(`/api/displayShelters?id=${id}`);
+				const response = await fetch(`/api/shelter?id=${id}`);
 				const data = await response.json();
 
 				if (response.ok) {
