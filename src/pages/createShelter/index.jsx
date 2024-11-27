@@ -1,4 +1,3 @@
-import React from "react";
 import {
 	Card,
 	CardHeader,
@@ -36,7 +35,7 @@ const CreateShelter = () => {
 		e.preventDefault();
 
 		try {
-			const response = await fetch("/api/createShelter", {
+			const response = await fetch("/api/shelter", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

@@ -30,30 +30,43 @@ export async function getServerSideProps(context) {
 export default function DogDetail({ dog }) {
 	const { data: session } = useSession();
 	const router = useRouter();
-	const { id } = router.query;
+	const [formData, setFormData] = useState({ applicationForm: "" });
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	useEffect(() => {
-		if (id) {
-			fetch(`/api/dogs/${id}`)
-				.then((res) => res.json())
-				.then(setDog);
-			fetch("/api/breeds")
-				.then((res) => res.json())
-				.then(setBreeds);
-		}
-	}, [id]);
-
-	const handleUpdate = async (e) => {
+	const handleAdoptionSubmit = async (e) => {
 		e.preventDefault();
-		const res = await fetch(`/api/manageDog/${id}`, {
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(dog),
-		});
-		if (res.ok) alert("Dog updated successfully!");
-	};
 
-	if (!dog) return <p>Loading...</p>;
+		if (!session) {
+			alert("You need to sign in to adopt a dog.");
+			return;
+		}
+
+		setIsSubmitting(true);
+		try {
+			const res = await fetch("/api/adoption", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					userId: session.user.id,
+					dogId: dog.id,
+					applicationForm: formData.applicationForm,
+				}),
+			});
+
+			if (res.ok) {
+				alert("Adoption application submitted successfully!");
+				setFormData({ applicationForm: "" });
+				router.push("/"); // Redirect to home or another page
+			} else {
+				const error = await res.json();
+				alert(`Error: ${error.message}`);
+			}
+		} catch (error) {
+			alert("An error occurred. Please try again.");
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
 
 	return (
 		<div className="relative min-h-full w-full flex justify-center py-10 bg-background">

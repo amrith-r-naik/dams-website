@@ -1,5 +1,6 @@
 // /pages/dogs/add.js (Updated)
 import { useState, useEffect } from "react";
+import Layout from "../layout";
 
 export default function AddDogPage() {
 	const [form, setForm] = useState({
@@ -21,7 +22,7 @@ export default function AddDogPage() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const res = await fetch("/api/addDog", {
+		const res = await fetch("/api/dogs", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(form),
@@ -65,3 +66,6 @@ export default function AddDogPage() {
 		</form>
 	);
 }
+AddDogPage.getLayout = function getLayout(page) {
+	return <Layout>{page}</Layout>;
+};
