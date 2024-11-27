@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../layout";
+import Loader from "@/components/ui/loader";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const ShelterPage = () => {
 	const [shelter, setShelter] = useState(null); // Shelter state
