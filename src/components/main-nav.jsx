@@ -73,15 +73,15 @@ export function MainNav({ className }) {
 				)}
 
 				<Link
-					href="/shelterDetails"
+					href="/shelters"
 					className={cn(
 						"transition-colors hover:text-foreground/80",
-						pathname?.startsWith("/shelterDetails")
+						pathname?.startsWith("/shelters")
 							? "text-foreground"
 							: "text-foreground/60"
 					)}
 				>
-					shelter Details
+					Shelters
 				</Link>
 			</nav>
 
