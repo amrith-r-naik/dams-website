@@ -45,7 +45,7 @@ const DogsPage = () => {
 						{dog.name}
 					</h2>
 					<p className="text-card-foreground/50 text-center">
-						Breed:{dog.breed.name}
+						Breed:{dog.breed?.name}
 					</p>
 					<p className="text-card-foreground/50 text-center">
 						Age: {dog.age} years

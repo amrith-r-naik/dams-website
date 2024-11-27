@@ -31,11 +31,11 @@ export default async function handler(req, res) {
 		try {
 			const { id, current } = req.query;
 
-			if (!id && !current) {
-				return res
-					.status(400)
-					.json({ error: "Missing query parameter: id or current" });
-			}
+			// if (!id && !current) {
+			// 	return res
+			// 		.status(400)
+			// 		.json({ error: "Missing query parameter: id or current" });
+			// }
 
 			if (id) {
 				const shelter = await prisma.shelter.findUnique({
