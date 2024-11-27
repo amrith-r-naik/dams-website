@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+import Layout from "../layout";
+
 const ShelterPage = () => {
 	const [shelter, setShelter] = useState(null); // Shelter is a single object, not an array
 	const [loading, setLoading] = useState(true);
@@ -46,7 +48,7 @@ const ShelterPage = () => {
 					Phone Number: {shelter.phoneNumber}
 				</p>
 				<Link
-					href={`/shelter-details/${shelter.id}`}
+					href={`/shelterDashboard/shelter-details/${shelter.id}`}
 					className="text-primary hover:underline mt-2 block text-center"
 				>
 					Edit
@@ -57,3 +59,6 @@ const ShelterPage = () => {
 };
 
 export default ShelterPage;
+ShelterPage.getLayout = function getLayout(page) {
+	return <Layout>{page}</Layout>;
+};

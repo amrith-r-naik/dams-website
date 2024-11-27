@@ -1,5 +1,6 @@
 // /pages/dogs/add.js (Updated)
 import { useState, useEffect } from "react";
+import Layout from "../layout";
 
 export default function AddDogPage() {
 	const [form, setForm] = useState({
@@ -65,3 +66,6 @@ export default function AddDogPage() {
 		</form>
 	);
 }
+AddDogPage.getLayout = function getLayout(page) {
+	return <Layout>{page}</Layout>;
+};
