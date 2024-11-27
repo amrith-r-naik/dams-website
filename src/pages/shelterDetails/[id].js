@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+
 const ShelterDetailsPage = () => {
 	const router = useRouter();
 	const { id } = router.query; // Get the shelter ID from the URL
@@ -31,22 +32,34 @@ const ShelterDetailsPage = () => {
 		fetchShelterDetails();
 	}, [id]);
 
-	if (loading) return <p>Loading...</p>;
-	if (!shelter) return <p>Shelter not found</p>;
+	if (loading)
+		return <p className="text-card-foreground/70-foreground">Loading...</p>;
+	if (!shelter)
+		return (
+			<p className="text-destructive-foreground font-medium">
+				Shelter not found
+			</p>
+		);
 
 	return (
-		<div className="container mx-auto p-8">
-			<h1 className="text-3xl font-bold text-center">{shelter.name}</h1>
-			<p className="text-center text-gray-600">{shelter.address}</p>
-			<p className="text-center text-gray-600">Phone: {shelter.phoneNumber}</p>
+		<div className="container mx-auto p-8 bg-background text-foreground">
+			<div className="max-w-3xl mx-auto text-center">
+				<h1 className="text-3xl font-bold text-primary-foreground">
+					{shelter.name}
+				</h1>
+				<p className="text-card-foreground/70 mt-2">{shelter.address}</p>
+				<p className="text-card-foreground/70">Phone: {shelter.phoneNumber}</p>
+			</div>
 
-			<h2 className="text-2xl font-semibold mt-6">Dogs in Shelter</h2>
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+			<h2 className="text-2xl font-semibold text-secondary-foreground mt-10">
+				Dogs in Shelter
+			</h2>
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
 				{shelter.dogs && shelter.dogs.length > 0 ? (
 					shelter.dogs.map((dog) => (
 						<div
 							key={dog.id}
-							className="card bg-gray-100 border border-gray-300 shadow-md p-4 rounded-lg"
+							className="bg-card text-card-foreground/70 border border-border rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow"
 						>
 							<h3 className="text-lg font-semibold">{dog.name}</h3>
 							<Image
@@ -54,21 +67,23 @@ const ShelterDetailsPage = () => {
 								alt={dog.name}
 								width={500}
 								height={500}
-								className="w-full h-48 object-cover rounded-lg mb-4"
+								className="w-full h-48 object-cover rounded-lg mt-2"
 							/>
-							<p>Age: {dog.age}</p>
-							<p>Status: {dog.status}</p>
-							<p>Description: {dog.description}</p>
+							<div className="mt-3 text-card-foreground/70">
+								<p>Age: {dog.age}</p>
+								<p>Status: {dog.status}</p>
+								<p className="text-sm line-clamp-3">{dog.description}</p>
+							</div>
 							<Link
 								href={`/dogs/${dog.id}`}
-								className="text-primary hover:underline mt-2 block text-center"
+								className="text-primary hover:underline mt-4 inline-block"
 							>
 								View More
 							</Link>
 						</div>
 					))
 				) : (
-					<p className="col-span-full text-center">
+					<p className="col-span-full text-center text-card-foreground/70-foreground">
 						No dogs found in this shelter.
 					</p>
 				)}
