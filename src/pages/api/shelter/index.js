@@ -7,24 +7,15 @@ export default async function handler(req, res) {
 		let { name, address, phoneNumber, staffId } = req.body;
 		staffId = parseInt(staffId, 10);
 
-		// Validate required fields
 		if (!name || !address || !phoneNumber || !staffId) {
 			return res.status(400).json({ error: "Missing required fields" });
 		}
 
 		try {
-			// Start a transaction to ensure both operations succeed together
 			const [shelter, updatedUser] = await prisma.$transaction([
-				// Create a new shelter
 				prisma.shelter.create({
-					data: {
-						name,
-						address,
-						phoneNumber,
-						staffId,
-					},
+					data: { name, address, phoneNumber, staffId },
 				}),
-				// Update the user's role
 				prisma.user.update({
 					where: { id: staffId },
 					data: { role: "SHELTER_STAFF" },
@@ -40,10 +31,15 @@ export default async function handler(req, res) {
 		try {
 			const { id, current } = req.query;
 
+			if (!id && !current) {
+				return res
+					.status(400)
+					.json({ error: "Missing query parameter: id or current" });
+			}
+
 			if (id) {
-				// Fetch a single shelter by ID
 				const shelter = await prisma.shelter.findUnique({
-					where: { id: parseInt(id) },
+					where: { id: parseInt(id, 10) },
 					include: { dogs: true },
 				});
 
@@ -55,11 +51,10 @@ export default async function handler(req, res) {
 			}
 
 			if (current === "true") {
-				// Fetch the current user's shelter
 				const session = await getServerSession(req, res, authOptions);
 
 				if (!session || !session.user || !session.user.email) {
-					return res.status(401).json({ error: "Unauthorized" });
+					return res.status(401).json({ error: "No active session found" });
 				}
 
 				const user = await prisma.user.findUnique({
@@ -84,11 +79,10 @@ export default async function handler(req, res) {
 				return res.status(200).json({ shelter: user.shelter });
 			}
 
-			// Fetch all shelters
 			const shelters = await prisma.shelter.findMany();
 			return res.status(200).json({ shelters });
 		} catch (error) {
-			console.error("Error handling shelter API:", error);
+			console.error("Error fetching shelters:", error);
 			return res.status(500).json({ error: "Internal server error" });
 		}
 	} else if (req.method === "PUT") {
@@ -98,7 +92,6 @@ export default async function handler(req, res) {
 			return res.status(400).json({ error: "Shelter ID is required" });
 		}
 
-		// Build the `data` object dynamically
 		const data = {};
 		if (name) data.name = name;
 		if (address) data.address = address;
@@ -118,8 +111,7 @@ export default async function handler(req, res) {
 				.json({ error: "Failed to update shelter details" });
 		}
 	} else {
-		// Method not allowed
-		res.setHeader("Allow", ["POST", "GET"]);
+		res.setHeader("Allow", ["POST", "GET", "PUT"]);
 		return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
 	}
 }

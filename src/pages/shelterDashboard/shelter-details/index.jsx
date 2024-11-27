@@ -100,6 +100,27 @@ const ShelterPage = () => {
 					</CardFooter>
 				</Card>
 			</div>
+			<form onSubmit={handleUpdate}>
+				<h1>Update Shelter</h1>
+				<input
+					value={shelter.name || ""}
+					onChange={(e) => setShelter({ ...shelter, name: e.target.value })}
+					placeholder="Shelter Name"
+				/>
+				<input
+					value={shelter.address || ""}
+					onChange={(e) => setShelter({ ...shelter, address: e.target.value })}
+					placeholder="Shelter Address"
+				/>
+				<textarea
+					value={shelter.phoneNumber || ""}
+					onChange={(e) =>
+						setShelter({ ...shelter, phoneNumber: e.target.value })
+					}
+					placeholder="Phone Number"
+				/>
+				<button type="submit">Update Shelter</button>
+			</form>
 		</div>
 	);
 };
