@@ -19,6 +19,31 @@ export default function AddDogPage() {
 			.then((res) => res.json())
 			.then(setBreeds);
 	}, []);
+	const handleImageUpload = async (e) => {
+		const files = Array.from(e.target.files);
+		const uploadedImages = [];
+
+		for (const file of files) {
+			const formData = new FormData();
+			formData.append("file", file);
+			formData.append("upload_preset", "dams_upload"); // Replace with your Cloudinary preset
+
+			const res = await fetch(
+				"https://api.cloudinary.com/v1_1/dxgkiabgb/image/upload",
+				{
+					method: "POST",
+					body: formData,
+				}
+			);
+			const data = await res.json();
+			uploadedImages.push(data.secure_url); // Push the secure URL of the uploaded image
+		}
+
+		setForm((prevForm) => ({
+			...prevForm,
+			imageUrl: [...prevForm.imageUrl, ...uploadedImages],
+		}));
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -62,6 +87,25 @@ export default function AddDogPage() {
 					</option>
 				))}
 			</select>
+			<input
+				type="file"
+				multiple
+				accept="image/*"
+				onChange={handleImageUpload}
+			/>
+			<div>
+				<h3>Uploaded Images:</h3>
+				<div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+					{form.imageUrl.map((url, index) => (
+						<img
+							key={index}
+							src={url}
+							alt={`Uploaded ${index}`}
+							style={{ width: "100px", height: "100px", objectFit: "cover" }}
+						/>
+					))}
+				</div>
+			</div>
 			<button type="submit">Add Dog</button>
 		</form>
 	);
