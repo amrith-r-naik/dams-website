@@ -71,19 +71,18 @@ export function MainNav({ className }) {
 						Dashboard
 					</Link>
 				)}
-				{session && session.user && session.user.role === "USER" && (
-					<Link
-						href="/shelterDetails"
-						className={cn(
-							"transition-colors hover:text-foreground/80",
-							pathname?.startsWith("/shelterDetails")
-								? "text-foreground"
-								: "text-foreground/60"
-						)}
-					>
-						shelter Details
-					</Link>
-				)}
+
+				<Link
+					href="/shelterDetails"
+					className={cn(
+						"transition-colors hover:text-foreground/80",
+						pathname?.startsWith("/shelterDetails")
+							? "text-foreground"
+							: "text-foreground/60"
+					)}
+				>
+					shelter Details
+				</Link>
 			</nav>
 
 			{/* Theme toggle button and signIn button */}

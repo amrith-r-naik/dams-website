@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import Layout from "../layout";
 import Loader from "@/components/ui/loader";
 import {
@@ -13,22 +14,23 @@ import {
 import { Button } from "@/components/ui/button";
 
 const ShelterPage = () => {
-	const [shelter, setShelter] = useState(null);
+	const [shelter, setShelter] = useState(null); // Shelter is a single object, not an array
 	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null); // Error state
+
+	const router = useRouter();
 
 	useEffect(() => {
 		const fetchShelter = async () => {
 			try {
 				const response = await fetch("/api/shelter?current=true");
 				const data = await response.json();
-
-				if (response.ok) {
-					setShelter(data.shelter);
-				} else {
-					console.error("Error fetching shelter:", data.error);
-				}
+				if (!response.ok)
+					throw new Error(data.error || "Failed to fetch shelter");
+				setShelter(data.shelter);
 			} catch (error) {
-				console.error("Error fetching shelter:", error);
+				console.error("Error fetching shelter:", err);
+				setError(err.message);
 			} finally {
 				setLoading(false);
 			}
@@ -36,6 +38,21 @@ const ShelterPage = () => {
 
 		fetchShelter();
 	}, []);
+	const handleUpdate = async (e) => {
+		e.preventDefault();
+		try {
+			const res = await fetch(`/api/shelter`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(shelter),
+			});
+			if (!res.ok) throw new Error("Failed to update shelter");
+			alert("Shelter updated successfully!");
+		} catch (error) {
+			console.error("Error updating shelter:", error);
+			alert("Error updating shelter");
+		}
+	};
 
 	if (loading)
 		return (
@@ -43,7 +60,7 @@ const ShelterPage = () => {
 				<Loader className="w-8 h-8 text-primary animate-spin" />
 			</div>
 		);
-
+	if (error) return <p>Error: {error}</p>;
 	if (!shelter)
 		return (
 			<div className="flex items-center justify-center min-h-screen bg-background text-muted-foreground">
@@ -83,6 +100,27 @@ const ShelterPage = () => {
 					</CardFooter>
 				</Card>
 			</div>
+			<form onSubmit={handleUpdate}>
+				<h1>Update Shelter</h1>
+				<input
+					value={shelter.name || ""}
+					onChange={(e) => setShelter({ ...shelter, name: e.target.value })}
+					placeholder="Shelter Name"
+				/>
+				<input
+					value={shelter.address || ""}
+					onChange={(e) => setShelter({ ...shelter, address: e.target.value })}
+					placeholder="Shelter Address"
+				/>
+				<textarea
+					value={shelter.phoneNumber || ""}
+					onChange={(e) =>
+						setShelter({ ...shelter, phoneNumber: e.target.value })
+					}
+					placeholder="Phone Number"
+				/>
+				<button type="submit">Update Shelter</button>
+			</form>
 		</div>
 	);
 };

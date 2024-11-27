@@ -3,6 +3,20 @@ import { prisma } from "@/lib/prisma";
 export default async function handler(req, res) {
 	if (req.method === "GET") {
 		try {
+			const { id } = req.query;
+
+			if (id) {
+				const dogs = await prisma.dogBreed.findUnique({
+					where: { id: parseInt(id, 10) },
+					include: { dogs: true },
+				});
+
+				if (!dogs) {
+					return res.status(404).json({ error: "Shelter not found" });
+				}
+
+				return res.status(200).json({ dogs });
+			}
 			const dogs = await prisma.dogBreed.findMany({
 				select: {
 					id: true,
