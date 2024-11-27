@@ -22,7 +22,7 @@ export default function AddDogPage() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const res = await fetch("/api/addDog", {
+		const res = await fetch("/api/dogs", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(form),

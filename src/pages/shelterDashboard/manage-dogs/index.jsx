@@ -11,7 +11,7 @@ const ManageDogsPage = () => {
 	useEffect(() => {
 		const fetchDogs = async () => {
 			try {
-				const response = await fetch("/api/manageDog");
+				const response = await fetch("/api/dogs");
 				const data = await response.json();
 				setDogs(data);
 			} catch (error) {
@@ -27,7 +27,7 @@ const ManageDogsPage = () => {
 	// Handle status update
 	const updateDogStatus = async (id, status) => {
 		try {
-			const response = await fetch(`/api/manageDog/${id}`, {
+			const response = await fetch(`/api/dogs/${id}`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
@@ -54,7 +54,7 @@ const ManageDogsPage = () => {
 	const deleteDog = async (id) => {
 		if (confirm("Are you sure you want to delete this dog?")) {
 			try {
-				const response = await fetch(`/api/manageDog/${id}`, {
+				const response = await fetch(`/api/dogs/${id}`, {
 					method: "DELETE",
 				});
 

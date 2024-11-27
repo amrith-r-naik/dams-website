@@ -10,7 +10,7 @@ const DogsPage = () => {
 	useEffect(() => {
 		const fetchDogs = async () => {
 			try {
-				const response = await fetch("/api/dogs");
+				const response = await fetch("/api/dogs?all=true");
 				const data = await response.json();
 				setDogs(data);
 			} catch (error) {
