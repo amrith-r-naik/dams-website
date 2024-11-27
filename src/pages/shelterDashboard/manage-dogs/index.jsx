@@ -81,6 +81,13 @@ const ManageDogsPage = () => {
 					key={dog.id}
 					className="card bg-card border border-border shadow-lg p-4 rounded-lg flex flex-col items-center"
 				>
+					<Image
+						src={dog.imageUrl[0] || "/placeholder-image.jpg"}
+						alt={dog.name}
+						width={500}
+						height={500}
+						className="w-full h-48 object-cover rounded-lg mb-4"
+					/>
 					<h2 className="text-xl font-semibold text-card-foreground text-center">
 						{dog.name}
 					</h2>

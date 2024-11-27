@@ -10,6 +10,7 @@ export default function UpdateDogPage() {
 
 	useEffect(() => {
 		if (id) {
+			// Fetch dog details and breed list on load
 			fetch(`/api/dogs/${id}`)
 				.then((res) => res.json())
 				.then(setDog);
@@ -19,6 +20,35 @@ export default function UpdateDogPage() {
 		}
 	}, [id]);
 
+	// Handle image upload to Cloudinary
+	const handleImageUpload = async (e) => {
+		const files = Array.from(e.target.files);
+		const uploadedImages = [];
+
+		for (const file of files) {
+			const formData = new FormData();
+			formData.append("file", file);
+			formData.append("upload_preset", "dams_upload"); // Replace with your Cloudinary preset
+
+			const res = await fetch(
+				"https://api.cloudinary.com/v1_1/dxgkiabgb/image/upload",
+				{
+					method: "POST",
+					body: formData,
+				}
+			);
+			const data = await res.json();
+			uploadedImages.push(data.secure_url); // Push the secure URL of the uploaded image
+		}
+
+		// Update the dog's imageUrl state with the newly uploaded images
+		setDog((prevDog) => ({
+			...prevDog,
+			imageUrl: [...prevDog.imageUrl, ...uploadedImages],
+		}));
+	};
+
+	// Handle form submission for updating the dog
 	const handleUpdate = async (e) => {
 		e.preventDefault();
 		const res = await fetch(`/api/dogs/${id}`, {
@@ -27,6 +57,14 @@ export default function UpdateDogPage() {
 			body: JSON.stringify(dog),
 		});
 		if (res.ok) alert("Dog updated successfully!");
+	};
+
+	// Delete an image from the dog's imageUrl array
+	const handleDeleteImage = (urlToDelete) => {
+		setDog((prevDog) => ({
+			...prevDog,
+			imageUrl: prevDog.imageUrl.filter((url) => url !== urlToDelete),
+		}));
 	};
 
 	if (!dog) return <p>Loading...</p>;
@@ -58,6 +96,40 @@ export default function UpdateDogPage() {
 					</option>
 				))}
 			</select>
+			<input
+				type="file"
+				multiple
+				accept="image/*"
+				onChange={handleImageUpload}
+			/>
+			<div>
+				<h3>Uploaded Images:</h3>
+				<div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+					{dog.imageUrl.map((url, index) => (
+						<div key={index} style={{ position: "relative" }}>
+							<img
+								src={url}
+								alt={`Uploaded ${index}`}
+								style={{ width: "100px", height: "100px", objectFit: "cover" }}
+							/>
+							<button
+								onClick={() => handleDeleteImage(url)}
+								style={{
+									position: "absolute",
+									top: "0",
+									right: "0",
+									background: "rgba(0, 0, 0, 0.5)",
+									color: "white",
+									border: "none",
+									cursor: "pointer",
+								}}
+							>
+								X
+							</button>
+						</div>
+					))}
+				</div>
+			</div>
 			<button type="submit">Update Dog</button>
 		</form>
 	);
