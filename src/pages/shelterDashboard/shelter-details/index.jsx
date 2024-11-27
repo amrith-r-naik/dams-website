@@ -10,7 +10,7 @@ const ShelterPage = () => {
 	useEffect(() => {
 		const fetchShelter = async () => {
 			try {
-				const response = await fetch("/api/shelter");
+				const response = await fetch("/api/shelter?current=true");
 				const data = await response.json();
 
 				if (response.ok) {

@@ -3,6 +3,13 @@ import { authOptions } from "../auth/[...nextauth]";
 import { prisma } from "@/lib/prisma";
 
 export default async function handler(req, res) {
+	const session = await getServerSession(req, res, authOptions);
+
+	// Check user authentication
+	if (!session || session.user.role !== "SHELTER_STAFF") {
+		return res.status(403).json({ error: "Unauthorized" });
+	}
+
 	const { id } = req.query;
 
 	// Validate ID
@@ -10,59 +17,58 @@ export default async function handler(req, res) {
 		return res.status(400).json({ error: "Invalid ID" });
 	}
 
-	const session = await getServerSession(req, res, authOptions);
+	// Check if the dog exists and belongs to the shelter managed by the user
+	const shelter = await prisma.shelter.findUnique({
+		where: { staffId: session.user.id },
+		include: { dogs: true },
+	});
 
-	// Ensure user is logged in
-	if (!session || session.user.role !== "SHELTER_STAFF") {
-		return res.status(403).json({ error: "Unauthorized" });
+	if (!shelter || !shelter.dogs.some((dog) => dog.id === parseInt(id))) {
+		return res.status(404).json({ error: "Dog not found in your shelter" });
 	}
 
-	try {
-		// Check if the dog exists and belongs to the current shelter staff
-		const dog = await prisma.dog.findUnique({
-			where: { id: parseInt(id) },
-			include: { shelter: true },
-		});
+	if (req.method === "PUT") {
+		// Extract fields from the request body
+		const { name, age, description, status, imageUrl, breedId } = req.body;
 
-		if (!dog) {
-			return res.status(404).json({ error: "Dog not found" });
+		// Validate status if provided
+		const validStatuses = ["AVAILABLE", "UNAVAILABLE", "ADOPTED", "DECEASED"];
+		if (status && !validStatuses.includes(status)) {
+			return res.status(400).json({ error: "Invalid status value" });
 		}
 
-		if (dog.shelter.staffId !== session.user.id) {
-			return res
-				.status(403)
-				.json({ error: "You do not have permission to modify this dog" });
-		}
+		// Build the `data` object dynamically for partial updates
+		const data = {};
+		if (name) data.name = name;
+		if (age) data.age = age;
+		if (description) data.description = description;
+		if (status) data.status = status;
+		if (imageUrl) data.imageUrl = imageUrl;
+		if (breedId) data.breedId = breedId;
 
-		if (req.method === "PUT") {
-			// Handle status update
-			const { status } = req.body;
-
-			// Validate the status with your enum values
-			const validStatuses = ["AVAILABLE", "UNAVAILABLE", "ADOPTED", "DECEASED"];
-			if (!validStatuses.includes(status)) {
-				return res.status(400).json({ error: "Invalid status value" });
-			}
-
+		try {
 			const updatedDog = await prisma.dog.update({
 				where: { id: parseInt(id) },
-				data: { status },
+				data,
 			});
-
 			return res.status(200).json(updatedDog);
-		} else if (req.method === "DELETE") {
-			// Handle dog deletion
+		} catch (error) {
+			console.error("Error updating dog:", error);
+			return res.status(500).json({ error: "Failed to update dog details" });
+		}
+	}
+
+	if (req.method === "DELETE") {
+		try {
 			await prisma.dog.delete({
 				where: { id: parseInt(id) },
 			});
-
-			return res.status(204).end(); // No content, successful deletion
-		} else {
-			// Method not allowed
-			return res.status(405).json({ error: "Method not allowed" });
+			return res.status(200).json({ message: "Dog deleted successfully" });
+		} catch (error) {
+			console.error("Error deleting dog:", error);
+			return res.status(500).json({ error: "Failed to delete dog" });
 		}
-	} catch (error) {
-		console.error("Error handling request:", error);
-		return res.status(500).json({ error: "Internal Server Error" });
 	}
+
+	return res.status(405).json({ error: "Method not allowed" });
 }

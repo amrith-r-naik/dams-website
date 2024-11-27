@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { prisma } from "@/lib/prisma"; // Assuming Prisma client is configured here
+import { prisma } from "@/lib/prisma";
 
 export default async function handler(req, res) {
 	if (req.method !== "GET") {
@@ -8,41 +8,57 @@ export default async function handler(req, res) {
 	}
 
 	try {
-		// Get the current user's session
-		const session = await getServerSession(req, res, authOptions);
+		const { id, current } = req.query; // Parse query parameters
 
-		if (!session || !session.user || !session.user.email) {
-			return res.status(401).json({ error: "Unauthorized" });
+		if (id) {
+			// Fetch a single shelter by ID
+			const shelter = await prisma.shelter.findUnique({
+				where: { id: parseInt(id) },
+			});
+
+			if (!shelter) {
+				return res.status(404).json({ error: "Shelter not found" });
+			}
+
+			return res.status(200).json({ shelter });
 		}
 
-		// Fetch the user from the database
-		const user = await prisma.user.findUnique({
-			where: { email: session.user.email },
-			include: { shelter: { include: { dogs: true } } }, // Include shelter and its related dogs
-		});
+		if (current === "true") {
+			// Fetch the current user's shelter
+			const session = await getServerSession(req, res, authOptions);
 
-		if (!user) {
-			return res.status(404).json({ error: "User not found" });
+			if (!session || !session.user || !session.user.email) {
+				return res.status(401).json({ error: "Unauthorized" });
+			}
+
+			const user = await prisma.user.findUnique({
+				where: { email: session.user.email },
+				include: { shelter: true },
+			});
+
+			if (!user) {
+				return res.status(404).json({ error: "User not found" });
+			}
+
+			if (user.role !== "SHELTER_STAFF") {
+				return res.status(403).json({ error: "Forbidden" });
+			}
+
+			if (!user.shelter) {
+				return res
+					.status(404)
+					.json({ error: "No shelter associated with this user" });
+			}
+
+			return res.status(200).json({ shelter: user.shelter });
+		} else {
+			// Fetch all shelters
+			const shelters = await prisma.shelter.findMany();
+
+			return res.status(200).json({ shelters });
 		}
-
-		// Check if the user is shelter staff
-		if (user.role !== "SHELTER_STAFF") {
-			return res.status(403).json({ error: "Forbidden" });
-		}
-
-		// Check if the user is linked to a shelter
-		if (!user.shelter) {
-			return res
-				.status(404)
-				.json({ error: "No shelter associated with this user" });
-		}
-
-		// Return shelter details
-		return res.status(200).json({
-			shelter: user.shelter,
-		});
 	} catch (error) {
-		console.error("Error fetching shelter details:", error);
+		console.error("Error handling shelter API:", error);
 		return res.status(500).json({ error: "Internal server error" });
 	}
 }

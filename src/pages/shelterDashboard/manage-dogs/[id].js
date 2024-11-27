@@ -10,7 +10,7 @@ export default function UpdateDogPage() {
 
 	useEffect(() => {
 		if (id) {
-			fetch(`/api/editDog/${id}`)
+			fetch(`/api/manageDog/${id}`)
 				.then((res) => res.json())
 				.then(setDog);
 			fetch("/api/dogBreed")
@@ -21,7 +21,7 @@ export default function UpdateDogPage() {
 
 	const handleUpdate = async (e) => {
 		e.preventDefault();
-		const res = await fetch(`/api/editDog/${id}`, {
+		const res = await fetch(`/api/manageDog/${id}`, {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(dog),
