@@ -25,76 +25,86 @@ export function MainNav({ className }) {
 			setIsLoading(false);
 		}, 3000);
 	};
+
 	return (
 		<div
-			className={`${className} mr-4 hidden md:flex justify-between relative`}
+			className={cn(
+				"sticky top-0 z-50 bg-background backdrop-blur-lg shadow-md",
+				className
+			)}
 		>
-			<Link href="/" className="mr-4 flex items-center space-x-2 lg:mr-6">
-				<Icons.logo className="h-12 w-12" />
-				<span className="hidden font-bold lg:inline-block text-xl">
-					FurEver
-				</span>
-			</Link>
-
-			<nav className="flex items-center gap-4 text-sm xl:gap-6">
-				<Link
-					href="/dogs"
-					className={cn(
-						"transition-colors hover:text-foreground/80",
-						pathname === "/dogs" ? "text-foreground" : "text-foreground/60"
-					)}
-				>
-					Dogs
+			<div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-1">
+				{/* Logo */}
+				<Link href="/" className="flex items-center space-x-2">
+					<Icons.logo className="h-10 w-10" />
+					<span className="hidden font-bold text-xl lg:inline-block">
+						FurEver
+					</span>
 				</Link>
 
-				{/* TODO (Trisha): Change the navigation menus*/}
-				<Link
-					href="/dogBreed"
-					className={cn(
-						"transition-colors hover:text-foreground/80",
-						pathname === "/dogBreed" ? "text-foreground" : "text-foreground/60"
-					)}
-				>
-					Breeds
-				</Link>
-
-				{session && session.user && session.user.role === "SHELTER_STAFF" && (
+				{/* Navigation */}
+				<nav className="flex items-center gap-6 text-sm xl:gap-8">
 					<Link
-						href="/shelterDashboard"
+						href="/dogs"
 						className={cn(
-							"transition-colors hover:text-foreground/80",
-							pathname?.startsWith("/shelterDashboard")
-								? "text-foreground"
-								: "text-foreground/60"
+							"transition-colors hover:text-primary",
+							pathname === "/dogs" ? "text-primary" : "text-muted-foreground"
 						)}
 					>
-						Dashboard
+						Dogs
 					</Link>
-				)}
-
-				<Link
-					href="/shelters"
-					className={cn(
-						"transition-colors hover:text-foreground/80",
-						pathname?.startsWith("/shelters")
-							? "text-foreground"
-							: "text-foreground/60"
+					<Link
+						href="/dogBreed"
+						className={cn(
+							"transition-colors hover:text-primary",
+							pathname === "/dogBreed"
+								? "text-primary"
+								: "text-muted-foreground"
+						)}
+					>
+						Breeds
+					</Link>
+					{session?.user?.role === "SHELTER_STAFF" && (
+						<Link
+							href="/shelterDashboard"
+							className={cn(
+								"transition-colors hover:text-primary",
+								pathname?.startsWith("/shelterDashboard")
+									? "text-primary"
+									: "text-muted-foreground"
+							)}
+						>
+							Dashboard
+						</Link>
 					)}
-				>
-					Shelters
-				</Link>
-			</nav>
+					<Link
+						href="/shelters"
+						className={cn(
+							"transition-colors hover:text-primary",
+							pathname?.startsWith("/shelters")
+								? "text-primary"
+								: "text-muted-foreground"
+						)}
+					>
+						Shelters
+					</Link>
+				</nav>
 
-			{/* Theme toggle button and signIn button */}
-			<div className="flex gap-2 justify-center">
-				<ThemeToggle />
-				{session ? (
-					<Button variant="destructive" onClick={handleLogout}>
-						Logout
-					</Button>
-				) : (
-					<Button onClick={() => router.push("/signIn")}>SignIn</Button>
-				)}
+				{/* Theme toggle button and sign-in/logout */}
+				<div className="flex items-center gap-4">
+					<ThemeToggle />
+					{session ? (
+						<Button
+							variant="destructive"
+							onClick={handleLogout}
+							disabled={isLoading}
+						>
+							{isLoading ? "Logging Out..." : "Logout"}
+						</Button>
+					) : (
+						<Button onClick={() => router.push("/signIn")}>Sign In</Button>
+					)}
+				</div>
 			</div>
 		</div>
 	);

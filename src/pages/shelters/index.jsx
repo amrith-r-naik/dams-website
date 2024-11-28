@@ -44,7 +44,7 @@ const SheltersPage = () => {
 						Phone Number: {shelter.phoneNumber}
 					</p>
 					<Link
-						href={`/shelterDetails/${shelter.id}`}
+						href={`/shelters/${shelter.id}`}
 						className="text-primary hover:underline mt-2 block text-center"
 					>
 						View More
