@@ -1,54 +1,58 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
-const ShelterDetailsPage = () => {
+const BreedDetailsPage = () => {
 	const router = useRouter();
-	const { id } = router.query; // Get the shelter ID from the URL
-	const [shelter, setShelter] = useState(null);
+	const { id } = router.query; // Get the Breed ID from the URL
+	const [breed, setBreed] = useState(null);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		if (!id) return;
 
-		const fetchShelterDetails = async () => {
+		const fetchBreedDetails = async () => {
 			try {
-				const response = await fetch(`/api/shelter?id=${id}`);
+				const response = await fetch(`/api/dogBreed?id=${id}`);
 				const data = await response.json();
 
 				if (response.ok) {
-					setShelter(data.shelter);
+					setBreed(data.dogs);
 				} else {
-					console.error("Error fetching shelter details:", data.error);
+					console.error("Error fetching Breed details:", data.error);
 				}
 			} catch (error) {
-				console.error("Error fetching shelter details:", error);
+				console.error("Error fetching Breed details:", error);
 			} finally {
 				setLoading(false);
 			}
 		};
 
-		fetchShelterDetails();
+		fetchBreedDetails();
 	}, [id]);
 
 	if (loading) return <p>Loading...</p>;
-	if (!shelter) return <p>Shelter not found</p>;
+	if (!breed) return <p>Breed not found</p>;
 
 	return (
 		<div className="container mx-auto p-8">
-			<h1 className="text-3xl font-bold text-center">{shelter.name}</h1>
-			<p className="text-center text-gray-600">{shelter.address}</p>
-			<p className="text-center text-gray-600">Phone: {shelter.phoneNumber}</p>
-
-			<h2 className="text-2xl font-semibold mt-6">Dogs in Shelter</h2>
+			<h2 className="text-2xl font-semibold mt-6">Dogs in Breed</h2>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-				{shelter.dogs && shelter.dogs.length > 0 ? (
-					shelter.dogs.map((dog) => (
+				{breed.dogs && breed.dogs.length > 0 ? (
+					breed.dogs.map((dog) => (
 						<div
 							key={dog.id}
 							className="card bg-gray-100 border border-gray-300 shadow-md p-4 rounded-lg"
 						>
 							<h3 className="text-lg font-semibold">{dog.name}</h3>
+							<Image
+								src={dog.imageUrl[0] || "/placeholder-image.jpg"}
+								alt={dog.name}
+								width={500}
+								height={500}
+								className="w-full h-48 object-cover rounded-lg mb-4"
+							/>
 							<p>Age: {dog.age}</p>
 							<p>Status: {dog.status}</p>
 							<p>Description: {dog.description}</p>
@@ -62,7 +66,7 @@ const ShelterDetailsPage = () => {
 					))
 				) : (
 					<p className="col-span-full text-center">
-						No dogs found in this shelter.
+						No dogs found in this Breed.
 					</p>
 				)}
 			</div>
@@ -70,4 +74,4 @@ const ShelterDetailsPage = () => {
 	);
 };
 
-export default ShelterDetailsPage;
+export default BreedDetailsPage;

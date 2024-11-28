@@ -1,7 +1,6 @@
 import * as React from "react";
-
-import { SearchForm } from "@/components/search-form";
-import { VersionSwitcher } from "@/components/version-switcher";
+import Link from "next/link";
+import { Icons } from "./icons";
 import {
 	Sidebar,
 	SidebarContent,
@@ -47,13 +46,17 @@ const data = {
 export function AppSidebar({ ...props }) {
 	return (
 		<Sidebar {...props}>
-			<SidebarHeader>
+			<SidebarHeader className="mt-4">
 				{/* TODO (Amrith) : Replace the header */}
-				<VersionSwitcher
-					versions={data.versions}
-					defaultVersion={data.versions[0]}
-				/>
-				<SearchForm />
+				<Link
+					href="/"
+					className="flex items-center justify-center -translate-x-4 space-x-2 w-full"
+				>
+					<Icons.logo className="h-12 w-12" />
+					<span className="hidden font-bold lg:inline-block text-xl">
+						FurEver
+					</span>
+				</Link>
 			</SidebarHeader>
 			<SidebarContent>
 				{/* We create a SidebarGroup for each parent. */}

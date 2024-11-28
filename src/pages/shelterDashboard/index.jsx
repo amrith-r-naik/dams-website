@@ -1,13 +1,22 @@
-import React from "react";
-import withRoleProtection from "@/lib/roleProtection";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 import Layout from "./layout";
+import Loader from "@/components/ui/loader";
 
-export default function ShelterDashboard() {
-	return <p>Hello</p>;
-}
-
-ShelterDashboard.getLayout = function getLayout(page) {
-	return <Layout>{page}</Layout>;
+const ShelterDashboardPage = () => {
+	const router = useRouter();
+	useEffect(() => {
+		router.push("/shelterDashboard/manage-dogs");
+	}, [router]);
+	return (
+		<div className="flex w-full items-center justify-center min-h-screen bg-background">
+			<Loader className="w-8 h-8 text-primary animate-spin" />
+		</div>
+	);
 };
 
-// export default withRoleProtection(ShelterDashboard, ["SHELTER_STAFF"]);
+export default ShelterDashboardPage;
+
+ShelterDashboardPage.getLayout = function getLayout(page) {
+	return <Layout>{page}</Layout>;
+};

@@ -2,6 +2,13 @@ import React, { useState, useEffect } from "react";
 import Layout from "../layout";
 import Image from "next/image";
 import Link from "next/link";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 const ManageDogsPage = () => {
 	const [dogs, setDogs] = useState([]);
@@ -92,7 +99,7 @@ const ManageDogsPage = () => {
 						{dog.name}
 					</h2>
 					<p className="text-card-foreground/50 text-center">
-						Breed: {dog.breed.name}
+						Breed: {dog.breed?.name}
 					</p>
 					<p className="text-card-foreground/50 text-center">
 						Age: {dog.age} years
@@ -103,16 +110,20 @@ const ManageDogsPage = () => {
 
 					{/* Status Dropdown */}
 					<div className="mt-2 w-full">
-						<select
+						<Select
 							value={dog.status}
-							onChange={(e) => updateDogStatus(dog.id, e.target.value)}
-							className="w-full p-2 bg-white border rounded"
+							onValueChange={(value) => updateDogStatus(dog.id, value)} // Use onValueChange instead of onChange
 						>
-							<option value="AVAILABLE">AVAILABLE</option>
-							<option value="UNAVAILABLE">UNAVAILABLE</option>
-							<option value="ADOPTED">ADOPTED</option>
-							<option value="DECEASED">DECEASED</option>
-						</select>
+							<SelectTrigger className="w-full p-2 border rounded">
+								<SelectValue placeholder="Select Status" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="AVAILABLE">AVAILABLE</SelectItem>
+								<SelectItem value="UNAVAILABLE">UNAVAILABLE</SelectItem>
+								<SelectItem value="ADOPTED">ADOPTED</SelectItem>
+								<SelectItem value="DECEASED">DECEASED</SelectItem>
+							</SelectContent>
+						</Select>
 					</div>
 
 					{/* Delete Dog Button */}
