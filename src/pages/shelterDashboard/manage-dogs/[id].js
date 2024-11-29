@@ -1,6 +1,7 @@
 // /pages/dogs/[id].js (Updated)
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 export default function UpdateDogPage() {
 	const [dog, setDog] = useState(null);
@@ -107,10 +108,12 @@ export default function UpdateDogPage() {
 				<div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
 					{dog.imageUrl.map((url, index) => (
 						<div key={index} style={{ position: "relative" }}>
-							<img
+							<Image
 								src={url}
 								alt={`Uploaded ${index}`}
 								style={{ width: "100px", height: "100px", objectFit: "cover" }}
+								width={100}
+								height={100}
 							/>
 							<button
 								onClick={() => handleDeleteImage(url)}

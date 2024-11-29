@@ -3,6 +3,7 @@ import Layout from "../layout";
 import Image from "next/image";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const ManageDogsPage = () => {
 	const [dogs, setDogs] = useState([]);
@@ -24,6 +25,28 @@ const ManageDogsPage = () => {
 
 		fetchDogs();
 	}, []);
+	const updateDogStatus = async (id, status) => {
+		try {
+			const response = await fetch(`/api/dogs/${id}`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ status }),
+			});
+			if (!response.ok) {
+				throw new Error("Failed to update status");
+			}
+			const updatedDog = await response.json();
+			setDogs((prevDogs) =>
+				prevDogs.map((dog) =>
+					dog.id === id ? { ...dog, status: updatedDog.status } : dog
+				)
+			);
+		} catch (error) {
+			console.error("Error updating dog status:", error);
+		}
+	};
 
 	// Handle dog deletion
 	const deleteDog = async (id) => {
@@ -111,6 +134,19 @@ const ManageDogsPage = () => {
 											{dog.description}
 										</p>
 									</div>
+									{/* Status Dropdown */}
+									<div className="mt-2 w-full">
+										<select
+											value={dog.status}
+											onChange={(e) => updateDogStatus(dog.id, e.target.value)}
+											className="w-full p-2 bg-black border rounded"
+										>
+											<option value="AVAILABLE">AVAILABLE</option>
+											<option value="UNAVAILABLE">UNAVAILABLE</option>
+											<option value="ADOPTED">ADOPTED</option>
+											<option value="DECEASED">DECEASED</option>
+										</select>
+									</div>
 
 									{/* Delete Button */}
 									<Button
@@ -120,6 +156,12 @@ const ManageDogsPage = () => {
 									>
 										<Trash2 size={16} /> Delete Dog
 									</Button>
+									<Link
+										href={`/shelterDashboard/manage-dogs/${dog.id}`}
+										className="text-primary hover:underline mt-2 block text-center"
+									>
+										View More
+									</Link>
 								</div>
 							))
 						)}

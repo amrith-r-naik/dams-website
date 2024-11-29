@@ -79,6 +79,7 @@ export default async function handler(req, res) {
 					id: true,
 					name: true,
 					age: true,
+					status: true,
 					breed: true,
 					description: true,
 					imageUrl: true,
