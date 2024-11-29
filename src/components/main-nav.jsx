@@ -88,6 +88,17 @@ export function MainNav({ className }) {
 					>
 						Shelters
 					</Link>
+					<Link
+						href="/favorite"
+						className={cn(
+							"transition-colors hover:text-primary",
+							pathname?.startsWith("/favorite")
+								? "text-primary"
+								: "text-muted-foreground"
+						)}
+					>
+						Favorites
+					</Link>
 				</nav>
 
 				{/* Theme toggle button and sign-in/logout */}
