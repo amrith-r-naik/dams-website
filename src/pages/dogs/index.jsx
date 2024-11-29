@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { MainNav } from "@/components/main-nav";
+import { useTheme } from "next-themes";
 
 const DogsPage = () => {
 	const [dogs, setDogs] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const { theme, setTheme } = useTheme();
 
 	useEffect(() => {
 		const fetchDogs = async () => {
@@ -35,11 +37,11 @@ const DogsPage = () => {
 					className="card bg-card border border-border shadow-lg p-4 rounded-lg flex flex-col items-center"
 				>
 					<Image
-						src={dog.imageUrl[0] || "/placeholder-image.jpg"}
+						src={dog.imageUrl[0] || "/placeholder-image-dog.png"}
 						alt={dog.name}
 						width={500}
 						height={500}
-						className="w-full h-48 object-cover rounded-lg mb-4"
+						className={`w-full h-48 object-cover rounded-lg mb-4 ${dog.imageUrl.length===0 && theme==="dark" && "invert"}`}
 					/>
 					<h2 className="text-xl font-semibold text-card-foreground text-center">
 						{dog.name}
