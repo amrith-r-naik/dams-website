@@ -22,12 +22,10 @@ export default function AddDogPage() {
 	const handleImageUpload = async (e) => {
 		const files = Array.from(e.target.files);
 		const uploadedImages = [];
-
 		for (const file of files) {
 			const formData = new FormData();
 			formData.append("file", file);
 			formData.append("upload_preset", "dams_upload"); // Replace with your Cloudinary preset
-
 			const res = await fetch(
 				"https://api.cloudinary.com/v1_1/dxgkiabgb/image/upload",
 				{
@@ -38,13 +36,11 @@ export default function AddDogPage() {
 			const data = await res.json();
 			uploadedImages.push(data.secure_url); // Push the secure URL of the uploaded image
 		}
-
 		setForm((prevForm) => ({
 			...prevForm,
 			imageUrl: [...prevForm.imageUrl, ...uploadedImages],
 		}));
 	};
-
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const res = await fetch("/api/dogs", {
@@ -115,11 +111,14 @@ export default function AddDogPage() {
 									key={index}
 									src={url}
 									alt={`Uploaded ${index}`}
-									className="w-24 h-24 object-cover rounded-lg border border-muted"
+									width={96} // Specify the width (24 * 4)
+									height={96} // Specify the height (24 * 4)
+									className="object-cover rounded-lg border border-muted"
 								/>
 							))}
 						</div>
 					</div>
+
 					<button
 						type="submit"
 						className="w-full py-3 px-6 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:ring ring-primary"
