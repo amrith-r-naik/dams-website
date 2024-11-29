@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Layout from "../layout";
 import Image from "next/image";
+
 export default function AddDogPage() {
 	const [form, setForm] = useState({
 		name: "",
@@ -12,6 +13,7 @@ export default function AddDogPage() {
 	});
 
 	const [breeds, setBreeds] = useState([]);
+	const [errors, setErrors] = useState({});
 
 	useEffect(() => {
 		fetch("/api/dogBreed")
@@ -25,7 +27,7 @@ export default function AddDogPage() {
 		for (const file of files) {
 			const formData = new FormData();
 			formData.append("file", file);
-			formData.append("upload_preset", "dams_upload"); // Replace with your Cloudinary preset
+			formData.append("upload_preset", "dams_upload");
 			const res = await fetch(
 				"https://api.cloudinary.com/v1_1/dxgkiabgb/image/upload",
 				{
@@ -34,15 +36,37 @@ export default function AddDogPage() {
 				}
 			);
 			const data = await res.json();
-			uploadedImages.push(data.secure_url); // Push the secure URL of the uploaded image
+			uploadedImages.push(data.secure_url);
 		}
 		setForm((prevForm) => ({
 			...prevForm,
 			imageUrl: [...prevForm.imageUrl, ...uploadedImages],
 		}));
 	};
+
+	const validateForm = () => {
+		const newErrors = {};
+		if (!form.name.trim()) newErrors.name = "Name is required.";
+		if (!form.age || form.age <= 0)
+			newErrors.age = "Age must be greater than 0.";
+		if (!form.description.trim())
+			newErrors.description = "Description is required.";
+		if (!form.breedId) newErrors.breedId = "Please select a breed.";
+		if (form.imageUrl.length === 0)
+			newErrors.imageUrl = "Please upload at least one image.";
+
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
+	};
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+
+		if (!validateForm()) {
+			alert("Please fix the errors before submitting.");
+			return;
+		}
+
 		const res = await fetch("/api/dogs", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
@@ -60,48 +84,87 @@ export default function AddDogPage() {
 				>
 					<h1 className="text-2xl font-semibold text-primary">Add Dog</h1>
 					<div className="space-y-4">
-						<input
-							className="w-full p-3 border border-input rounded-lg bg-background text-foreground focus:ring ring-primary"
-							placeholder="Name"
-							value={form.name}
-							onChange={(e) => setForm({ ...form, name: e.target.value })}
-						/>
-						<input
-							type="number"
-							className="w-full p-3 border border-input rounded-lg bg-background text-foreground focus:ring ring-primary"
-							placeholder="Age"
-							value={form.age}
-							onChange={(e) => setForm({ ...form, age: e.target.value })}
-						/>
-						<textarea
-							className="w-full p-3 border border-input rounded-lg bg-background text-foreground focus:ring ring-primary"
-							placeholder="Description"
-							value={form.description}
-							onChange={(e) =>
-								setForm({ ...form, description: e.target.value })
-							}
-						/>
-						<select
-							className="w-full p-3 border border-input rounded-lg bg-background text-foreground focus:ring ring-primary"
-							value={form.breedId || ""}
-							onChange={(e) =>
-								setForm({ ...form, breedId: parseInt(e.target.value) })
-							}
-						>
-							<option value="">Select Breed</option>
-							{breeds.map((breed) => (
-								<option key={breed.id} value={breed.id}>
-									{breed.name}
-								</option>
-							))}
-						</select>
-						<input
-							type="file"
-							multiple
-							accept="image/*"
-							className="w-full p-3 border border-input rounded-lg bg-background text-foreground focus:ring ring-primary"
-							onChange={handleImageUpload}
-						/>
+						<div>
+							<input
+								className={`w-full p-3 border rounded-lg bg-background text-foreground focus:ring ${
+									errors.name ? "border-red-500" : "border-input"
+								}`}
+								placeholder="Name"
+								value={form.name}
+								onChange={(e) => setForm({ ...form, name: e.target.value })}
+							/>
+							{errors.name && (
+								<p className="text-red-500 text-sm mt-1">{errors.name}</p>
+							)}
+						</div>
+						<div>
+							<input
+								type="number"
+								className={`w-full p-3 border rounded-lg bg-background text-foreground focus:ring ${
+									errors.age ? "border-red-500" : "border-input"
+								}`}
+								placeholder="Age"
+								value={form.age === 0 ? "" : form.age}
+								onChange={(e) =>
+									setForm({
+										...form,
+										age: e.target.value ? parseInt(e.target.value) : 0,
+									})
+								}
+							/>
+						</div>
+						<div>
+							<textarea
+								className={`w-full p-3 border rounded-lg bg-background text-foreground focus:ring ${
+									errors.description ? "border-red-500" : "border-input"
+								}`}
+								placeholder="Description"
+								value={form.description}
+								onChange={(e) =>
+									setForm({ ...form, description: e.target.value })
+								}
+							/>
+							{errors.description && (
+								<p className="text-red-500 text-sm mt-1">
+									{errors.description}
+								</p>
+							)}
+						</div>
+						<div>
+							<select
+								className={`w-full p-3 border rounded-lg bg-background text-foreground focus:ring ${
+									errors.breedId ? "border-red-500" : "border-input"
+								}`}
+								value={form.breedId || ""}
+								onChange={(e) =>
+									setForm({ ...form, breedId: parseInt(e.target.value) })
+								}
+							>
+								<option value="">Select Breed</option>
+								{breeds.map((breed) => (
+									<option key={breed.id} value={breed.id}>
+										{breed.name}
+									</option>
+								))}
+							</select>
+							{errors.breedId && (
+								<p className="text-red-500 text-sm mt-1">{errors.breedId}</p>
+							)}
+						</div>
+						<div>
+							<input
+								type="file"
+								multiple
+								accept="image/*"
+								className={`w-full p-3 border rounded-lg bg-background text-foreground focus:ring ${
+									errors.imageUrl ? "border-red-500" : "border-input"
+								}`}
+								onChange={handleImageUpload}
+							/>
+							{errors.imageUrl && (
+								<p className="text-red-500 text-sm mt-1">{errors.imageUrl}</p>
+							)}
+						</div>
 					</div>
 					<div>
 						<h3 className="text-lg font-semibold">Uploaded Images:</h3>
@@ -111,8 +174,8 @@ export default function AddDogPage() {
 									key={index}
 									src={url}
 									alt={`Uploaded ${index}`}
-									width={96} // Specify the width (24 * 4)
-									height={96} // Specify the height (24 * 4)
+									width={96}
+									height={96}
 									className="object-cover rounded-lg border border-muted"
 								/>
 							))}
