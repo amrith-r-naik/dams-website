@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Layout from "../layout";
 
 export default function Adoptions() {
 	const [adoptions, setAdoptions] = useState([]);
@@ -146,3 +147,7 @@ export default function Adoptions() {
 		</div>
 	);
 }
+Adoptions.getLayout = function getLayout(page) {
+	return <Layout>{page}</Layout>;
+};
+
