@@ -1,40 +1,34 @@
-datasource db {
-  provider = "postgresql" // Or any other database you are using
-  url      = env("DATABASE_URL")
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
-// NextAuth models for authentication
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
 model User {
-  id            Int       @id @default(autoincrement())
+  id            Int            @id @default(autoincrement())
   name          String?
-  email         String    @unique
-  password      String? // Storing password hashes
+  email         String         @unique
+  password      String?
   emailVerified DateTime?
   image         String?
-
-  accounts Account[] // One user can have multiple accounts (OAuth)
-  sessions Session[] // One user can have multiple sessions
-  role     Role      @default(USER)
-  shelter  Shelter? // If the user is a shelter staff
-
-  favorites Favorite[] // Adopters can mark dogs as favorites
-  adoptions Adoption[] // Adopters can submit adoption applications
-  reviews   Review[] // Adopters can leave reviews
-
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  Notification Notification[]
+  role          Role           @default(USER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  accounts      Account[]
+  adoptions     Adoption[]
+  favorites     Favorite[]
+  Notification  Notification[]
+  reviews       Review[]
+  sessions      Session[]
+  shelter       Shelter?
 }
 
 model Account {
   id                Int      @id @default(autoincrement())
   userId            Int
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   type              String
   provider          String
   providerAccountId String
@@ -47,6 +41,7 @@ model Account {
   session_state     String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -55,10 +50,10 @@ model Session {
   id           Int      @id @default(autoincrement())
   sessionToken String   @unique
   userId       Int
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expires      DateTime
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -70,36 +65,34 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// Custom models for your app
-
 model Shelter {
   id          Int      @id @default(autoincrement())
   name        String
   address     String
   phoneNumber String
-  dogs        Dog[] // A shelter can have many dogs
-  staffId     Int      @unique
-  staff       User     @relation(fields: [staffId], references: [id]) // Link to User model
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  staffId     Int      @unique
+  dogs        Dog[]
+  staff       User     @relation(fields: [staffId], references: [id])
 }
 
 model Dog {
   id          Int        @id @default(autoincrement())
   name        String
   age         Int
-  description String
   status      DogStatus
-  imageUrl    String[]
   shelterId   Int
-  shelter     Shelter    @relation(fields: [shelterId], references: [id])
-  favorites   Favorite[] // A dog can be marked as favorite by many adopters
-  adoptions   Adoption[] // A dog can have multiple adoption applications
-  reviews     Review[] // Reviews left for the dog
-  breedId     Int?
-  breed       DogBreed?  @relation(fields: [breedId], references: [id])
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  description String
+  breedId     Int?
+  imageUrl    String[]
+  adoptions   Adoption[]
+  breed       DogBreed?  @relation(fields: [breedId], references: [id])
+  shelter     Shelter    @relation(fields: [shelterId], references: [id])
+  favorites   Favorite[]
+  reviews     Review[]
 }
 
 model DogBreed {
@@ -118,35 +111,37 @@ model DogBreed {
 
 model Favorite {
   id        Int      @id @default(autoincrement())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
   dogId     Int
-  dog       Dog      @relation(fields: [dogId], references: [id])
   createdAt DateTime @default(now())
+  userId    Int
+  dog       Dog      @relation(fields: [dogId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, dogId])
 }
 
 model Adoption {
   id              Int            @id @default(autoincrement())
-  userId          Int
-  user            User           @relation(fields: [userId], references: [id])
   dogId           Int
-  dog             Dog            @relation(fields: [dogId], references: [id])
   status          AdoptionStatus
   applicationForm String
   updatedAt       DateTime       @updatedAt
   createdAt       DateTime       @default(now())
+  userId          Int
+  dog             Dog            @relation(fields: [dogId], references: [id])
+  user            User           @relation(fields: [userId], references: [id])
 }
 
 model Review {
   id         Int      @id @default(autoincrement())
   content    String
-  userId     Int
-  user       User     @relation(fields: [userId], references: [id])
   dogId      Int
-  dog        Dog      @relation(fields: [dogId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   isApproved Boolean  @default(false)
+  userId     Int
+  dog        Dog      @relation(fields: [dogId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model Notification {
@@ -154,8 +149,8 @@ model Notification {
   content     String
   isRead      Boolean  @default(false)
   recipientId Int
-  recipient   User     @relation(fields: [recipientId], references: [id])
   createdAt   DateTime @default(now())
+  recipient   User     @relation(fields: [recipientId], references: [id])
 }
 
 enum DogStatus {

@@ -13,6 +13,9 @@ import {
 	SidebarMenuItem,
 	SidebarRail,
 } from "@/components/ui/sidebar";
+import { Button } from "./ui/button";
+import { Home } from "lucide-react";
+import { useRouter } from "next/router";
 
 // This is sample data.
 const data = {
@@ -44,19 +47,23 @@ const data = {
 };
 
 export function AppSidebar({ ...props }) {
+	const router = useRouter();
 	return (
 		<Sidebar {...props}>
-			<SidebarHeader className="mt-4">
-				{/* TODO (Amrith) : Replace the header */}
-				<Link
-					href="/"
-					className="flex items-center justify-center -translate-x-4 space-x-2 w-full"
-				>
+			<SidebarHeader className="m-2 flex flex-row justify-between items-center">
+				<Link href="/" className="flex items-center justify-center">
 					<Icons.logo className="h-12 w-12" />
 					<span className="hidden font-bold lg:inline-block text-xl">
 						FurEver
 					</span>
 				</Link>
+				<Button
+					variant="outline"
+					className="w-fit p-0 px-3"
+					onClick={() => router.push("/")}
+				>
+					<Home />
+				</Button>
 			</SidebarHeader>
 			<SidebarContent>
 				{/* We create a SidebarGroup for each parent. */}
