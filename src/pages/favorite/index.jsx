@@ -1,15 +1,16 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trash } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function FavoriteDogsList() {
 	const [favorites, setFavorites] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const router = useRouter();
 
 	useEffect(() => {
 		const fetchFavorites = async () => {
@@ -20,6 +21,7 @@ export default function FavoriteDogsList() {
 				}
 				const data = await response.json();
 				setFavorites(data);
+				console.log(data);
 			} catch (err) {
 				setError(err.message);
 			} finally {
@@ -64,7 +66,7 @@ export default function FavoriteDogsList() {
 
 	if (favorites.length === 0) {
 		return (
-			<div className="flex flex-col items-center justify-center h-64">
+			<div className="flex flex-col items-center justify-center h-64 w-full">
 				<p className="text-muted-foreground text-lg font-medium">
 					🐾 No favorites added yet!
 				</p>
@@ -73,40 +75,45 @@ export default function FavoriteDogsList() {
 	}
 
 	return (
-		<div className="p-4">
+		<div className="p-4 w-full">
 			<h2 className="text-2xl font-bold mb-4">Your Favorite Dogs</h2>
-			<div className="space-y-4">
+			<div className="grid grid-cols-5 gap-2 w-full">
 				{favorites.map((fav) => (
-					<Card key={fav.id} className="border border-border">
-						<div className="flex items-center gap-4 p-4">
+					<Card key={fav.id} className="border border-border p-2">
+						<div
+							className="flex items-center gap-4 p-2 cursor-pointer "
+							onClick={() => router.push(`/dogs/${fav.dogId}`)}
+						>
 							<Image
 								src={fav.dog.imageUrl[0] || "/placeholder-image.jpg"}
 								alt={fav.dog.name}
 								width={100}
 								height={100}
-								className="w-20 h-20 object-cover rounded-lg"
+								className="w-20 h-20 object-cover rounded-lg cursor-pointer"
+								onClick={() => {
+									router.push(`/dogs/${fav.dog.id}`);
+								}}
 							/>
 							<div className="flex-1">
-								<h3 className="text-lg font-medium text-card-foreground">
+								<h3 className="text-lg flex items-center gap-4 font-medium text-card-foreground">
 									{fav.dog.name}
 								</h3>
-								<p className="text-sm text-muted-foreground line-clamp-2">
-									{fav.dog.description || "No description available."}
+								<p className="text-sm text-card-foreground/40 line-clamp-2">
+									{fav.dog.breed?.name || "Breed Unkown."}
 								</p>
 							</div>
-							<div className="flex items-center gap-2">
-								<Link href={`/dogs/${fav.dog.id}`}>Details</Link>
-
-								<Button
-									variant="destructive"
-									size="sm"
-									onClick={() => deleteFavorite(fav.dog.id)}
-								>
-									<Trash size={16} />
-									Delete from favorites
-								</Button>
-							</div>
 						</div>
+						<Button
+							variant="destructive"
+							size="sm"
+							className="w-full"
+							onClick={() => {
+								deleteFavorite(fav.dog.id);
+							}}
+						>
+							<Trash size={16} />
+							Remove from favorites
+						</Button>
 					</Card>
 				))}
 			</div>

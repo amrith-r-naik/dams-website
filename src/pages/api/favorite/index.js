@@ -17,7 +17,11 @@ export default async function handler(req, res) {
 			const favorites = await prisma.favorite.findMany({
 				where: { userId },
 				include: {
-					dog: true, // Assuming you have a "dog" relation in your Prisma schema
+					dog: {
+						include: {
+							breed: true,
+						},
+					}, // Assuming you have a "dog" relation in your Prisma schema
 				},
 			});
 

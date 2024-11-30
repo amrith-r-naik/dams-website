@@ -93,11 +93,11 @@ const DogsPage = () => {
 		const isFavorite = favorites.includes(dogId);
 		try {
 			if (isFavorite) {
-				await fetch(`/api/favorite/${dogId}`, { method: "DELETE" });
 				setFavorites(favorites.filter((id) => id !== dogId));
+				await fetch(`/api/favorite/${dogId}`, { method: "DELETE" });
 			} else {
-				await fetch(`/api/favorite/${dogId}`, { method: "POST" });
 				setFavorites([...favorites, dogId]);
+				await fetch(`/api/favorite/${dogId}`, { method: "POST" });
 			}
 		} catch (error) {
 			console.error(
@@ -179,7 +179,7 @@ const DogsPage = () => {
 								</h2>
 								<Heart
 									fill={favorites.includes(dog.id) ? "red" : "none"}
-									stroke="red"
+									stroke={favorites.includes(dog.id) ? "red" : "white"}
 									opacity={0.8}
 									size={20}
 									className="cursor-pointer"
