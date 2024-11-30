@@ -11,8 +11,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-
-import { Card, CardContent } from "@/components/ui/card";
+import Loader from "@/components/ui/loader";
+import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
 
@@ -76,7 +76,12 @@ export default function UpdateDogPage() {
 		}));
 	};
 
-	if (!dog) return <p>Loading...</p>;
+	if (!dog)
+		return (
+			<div className="w-full min-h-full flex items-center justify-center">
+				<Loader />
+			</div>
+		);
 
 	return (
 		<form onSubmit={handleUpdate} className="p-6 space-y-6">

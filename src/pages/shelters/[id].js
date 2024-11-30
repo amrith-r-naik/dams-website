@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import Loader from "@/components/ui/loader";
 
 const ShelterDetailsPage = () => {
 	const router = useRouter();
@@ -33,7 +34,11 @@ const ShelterDetailsPage = () => {
 	}, [id]);
 
 	if (loading)
-		return <p className="text-card-foreground/70-foreground">Loading...</p>;
+		return (
+			<div className="w-full min-h-full flex items-center justify-center">
+				<Loader />
+			</div>
+		);
 	if (!shelter)
 		return (
 			<p className="text-destructive-foreground font-medium">

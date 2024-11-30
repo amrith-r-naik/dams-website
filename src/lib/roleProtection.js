@@ -1,3 +1,4 @@
+import Loader from "@/components/ui/loader";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -7,7 +8,11 @@ const withRoleProtection = (WrappedComponent, allowedRoles) => {
 		const router = useRouter();
 
 		if (status === "loading") {
-			return <div>Loading...</div>; // or a loading spinner
+			return (
+				<div>
+					<Loader />
+				</div>
+			); // or a loading spinner
 		}
 
 		if (!session || !allowedRoles.includes(session.user.role)) {

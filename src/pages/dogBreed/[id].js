@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import Loader from "@/components/ui/loader";
 
 const BreedDetailsPage = () => {
 	const router = useRouter();
@@ -32,25 +33,19 @@ const BreedDetailsPage = () => {
 		fetchBreedDetails();
 	}, [id]);
 
-	if (loading) {
+	if (loading)
 		return (
-			<div className="flex items-center justify-center h-screen">
-				<p className="text-lg font-medium">Loading...</p>
+			<div className="w-full min-h-full flex items-center justify-center">
+				<Loader />
 			</div>
 		);
-	}
-
-	if (!breed) {
-		return (
-			<div className="flex items-center justify-center h-screen">
-				<p className="text-lg font-medium text-red-500">Breed not found</p>
-			</div>
-		);
-	}
+	if (!breed) return <p>Breed not found</p>;
 
 	return (
 		<div className="container mx-auto p-8 bg-background text-foreground">
-			<h2 className="text-3xl font-bold text-center mb-8">Dogs of Breed {breed.name}</h2>
+			<h2 className="text-3xl font-bold text-center mb-8">
+				Dogs of Breed {breed.name}
+			</h2>
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
 				{breed.dogs && breed.dogs.length > 0 ? (
 					breed.dogs.map((dog) => (

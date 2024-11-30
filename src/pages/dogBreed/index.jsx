@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MainNav } from "@/components/main-nav";
+import Loader from "@/components/ui/loader";
 
 const DogsPage = () => {
 	const [dogs, setDogs] = useState([]);
@@ -23,7 +23,12 @@ const DogsPage = () => {
 		fetchDogs();
 	}, []);
 
-	if (loading) return <p>Loading...</p>;
+	if (loading)
+		return (
+			<div className="w-full min-h-full flex items-center justify-center">
+				<Loader />
+			</div>
+		);
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 h-full p-8">
 			{dogs.length === 0 && <p>NO DOGS FOUND</p>}
