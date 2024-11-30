@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Heart } from "lucide-react";
+import { Heart, Search } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import Loader from "@/components/ui/loader";
+import { Input } from "@/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 const DogsPage = () => {
 	const [dogs, setDogs] = useState([]);
@@ -13,8 +21,8 @@ const DogsPage = () => {
 	const { theme, setTheme } = useTheme();
 	const [favorites, setFavorites] = useState([]);
 	const [searchQuery, setSearchQuery] = useState("");
-	const [ageRange, setAgeRange] = useState("");
-	const [selectedBreed, setSelectedBreed] = useState("");
+	const [ageRange, setAgeRange] = useState("all");
+	const [selectedBreed, setSelectedBreed] = useState("all");
 	const [breeds, setBreeds] = useState([]); // List of all breeds for dropdown
 	const router = useRouter();
 	const session = useSession();
@@ -68,7 +76,7 @@ const DogsPage = () => {
 		}
 
 		// Filter by age range
-		if (ageRange) {
+		if (ageRange != "all") {
 			const [min, max] = ageRange.split("-").map(Number);
 			updatedDogs = updatedDogs.filter(
 				(dog) => dog.age >= min && dog.age <= max
@@ -76,7 +84,7 @@ const DogsPage = () => {
 		}
 
 		// Filter by selected breed
-		if (selectedBreed) {
+		if (selectedBreed != "all") {
 			updatedDogs = updatedDogs.filter(
 				(dog) => dog.breed?.name === selectedBreed
 			);
@@ -118,40 +126,43 @@ const DogsPage = () => {
 	return (
 		<div className="w-full h-full p-8 bg-background text-foreground">
 			{/* Search and Sort */}
-			<div className="flex flex-wrap items-center gap-4 mb-6">
-				<input
+			<div className="flex items-center gap-4 mb-6 w-full">
+				<Input
 					type="text"
 					placeholder="Search by breed"
-					className="border rounded-lg p-2 text-sm"
+					className="w-full relative pl-10"
 					value={searchQuery}
 					onChange={(e) => setSearchQuery(e.target.value)}
 				/>
+				<Search className="absolute opacity-80  translate-x-full" size={16} />
 				{/* Age Range Dropdown */}
-				<select
-					className="border rounded-lg p-2 text-sm"
-					value={ageRange}
-					onChange={(e) => setAgeRange(e.target.value)}
-				>
-					<option value="">All Age Range</option>
-					<option value="0-1">0-1 Years</option>
-					<option value="2-4">2-4 Years</option>
-					<option value="5-7">5-7 Years</option>
-					<option value="8-12">8-12 Years</option>
-					<option value="13-20">13+ Years</option>
-				</select>
+				<Select onValueChange={(value) => setAgeRange(value)}>
+					<SelectTrigger className="w-1/4" value={ageRange}>
+						<SelectValue placeholder={"Filter by Age Range"} />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="all">All Age group</SelectItem>
+						<SelectItem value="0-1">0-1 Years</SelectItem>
+						<SelectItem value="2-4">2-4 Years</SelectItem>
+						<SelectItem value="5-7">5-7 Years</SelectItem>
+						<SelectItem value="8-12">8-12 Years</SelectItem>
+						<SelectItem value="13-20">13+ Years</SelectItem>
+					</SelectContent>
+				</Select>
 				{/* Breed Dropdown */}
-				<select
-					className="border rounded-lg p-2 text-sm"
-					value={selectedBreed}
-					onChange={(e) => setSelectedBreed(e.target.value)}
-				>
-					<option value="">All Breeds</option>
-					{breeds.map((breed) => (
-						<option key={breed} value={breed}>
-							{breed}
-						</option>
-					))}
-				</select>
+				<Select onValueChange={(value) => setSelectedBreed(value)}>
+					<SelectTrigger className="w-1/4">
+						<SelectValue placeholder="Filter by breed" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="all">All Breeds</SelectItem>
+						{breeds.map((breed) => (
+							<SelectItem key={breed} value={breed}>
+								{breed}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
 			</div>
 
 			{/* Dog Cards */}
