@@ -172,9 +172,7 @@ const DogsPage = () => {
 						<p className="text-lg font-medium text-muted-foreground">
 							🐾 No Dogs Found
 						</p>
-						<p className="text-sm text-muted-foreground mt-2">
-							Try adjusting your filters or come back later.
-						</p>
+						
 					</div>
 				)}
 				{filteredDogs.map((dog) => (
@@ -188,7 +186,7 @@ const DogsPage = () => {
 							width={500}
 							height={500}
 							className={`w-full h-48 rounded-lg mb-4 ${
-								dog.imageUrl.length === 0 && theme === "dark" && "invert"
+								dog.imageUrl.length === 0 && (theme === "dark" || theme === "system") && "invert"
 							} ${
 								dog.imageUrl.length === 0 ? "object-contain" : "object-cover"
 							}`}
