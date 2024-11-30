@@ -111,7 +111,7 @@ const HeroSection = () => {
 			{/* About Us Section */}
 			<section
 				id="about"
-				className="w-full h-screen px-32 py-20 flex flex-col items-center justify-center text-center bg-gradient-to-br text-white"
+				className="w-full h-screen px-32 py-20 flex flex-col items-center justify-center text-center bg-gradient-to-br"
 			>
 				<h2
 					className="text-5xl font-extrabold mb-6"
@@ -131,7 +131,7 @@ const HeroSection = () => {
 			{/* Contact Us Section */}
 			<section
 				id="contact"
-				className="w-full h-screen px-32 py-20 flex flex-col items-center justify-center text-center text-white"
+				className="w-full h-screen px-32 py-20 flex flex-col items-center justify-center text-center"
 			>
 				<h2 className="text-5xl font-extrabold mb-6" style={{ color: "#D4A373" }}>
 					Contact Us
