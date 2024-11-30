@@ -177,7 +177,7 @@ const DogsPage = () => {
 								</h2>
 								<Heart
 									fill={favorites.includes(dog.id) ? "red" : "none"}
-									stroke="red"
+									stroke={favorites.includes(dog.id) ? "red" : "white"}
 									opacity={0.8}
 									size={20}
 									className="cursor-pointer"
