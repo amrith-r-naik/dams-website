@@ -4,11 +4,13 @@ import Image from "next/image";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import Loader from "@/components/ui/loader";
 
 const ManageDogsPage = () => {
 	const [dogs, setDogs] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const {theme} =useTheme();
 
 	// Fetch dogs
 	useEffect(() => {
@@ -112,11 +114,11 @@ const ManageDogsPage = () => {
 									{/* Image Section */}
 									<div className="relative w-full h-40 mb-4">
 										<Image
-											src={dog.imageUrl[0] || "/placeholder-image.jpg"}
+											src={dog.imageUrl[0] || "/placeholder-image-dog.png"}
 											alt={dog.name}
 											layout="fill"
 											objectFit="cover"
-											className="rounded-lg"
+											className={`w-full h-48 rounded-lg mb-4 ${dog.imageUrl.length===0 && (theme==="dark" || theme==="system") && "invert"} ${dog.imageUrl.length===0 ? "object-contain" : "object-cover"}`}
 										/>
 									</div>
 
