@@ -3,11 +3,13 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
 
 const DogsPage = () => {
 	const [dogs, setDogs] = useState([]);
 	const [filteredDogs, setFilteredDogs] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const { theme, setTheme } = useTheme();
 	const [favorites, setFavorites] = useState([]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [ageRange, setAgeRange] = useState("");
@@ -164,11 +166,11 @@ const DogsPage = () => {
 						className="relative card bg-card border border-border shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105"
 					>
 						<Image
-							src={dog.imageUrl[0] || "/placeholder-image.jpg"}
+							src={dog.imageUrl[0] || "/placeholder-image-dog.png"}
 							alt={dog.name}
 							width={500}
 							height={500}
-							className="w-full h-56 object-cover"
+							className={`w-full h-48 rounded-lg mb-4 ${dog.imageUrl.length===0 && theme==="dark" && "invert"} ${dog.imageUrl.length===0 ? "object-contain" : "object-cover"}`}
 						/>
 						<div className="p-4 flex flex-col gap-2 h-1/2 justify-evenly">
 							<div className="w-full flex justify-between items-center">
