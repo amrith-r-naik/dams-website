@@ -170,7 +170,7 @@ const DogsPage = () => {
 							alt={dog.name}
 							width={500}
 							height={500}
-							className={`w-full h-48 rounded-lg mb-4 ${dog.imageUrl.length===0 && theme==="dark" && "invert"} ${dog.imageUrl.length===0 ? "object-contain" : "object-cover"}`}
+							className={`w-full h-48 rounded-lg mb-4 ${dog.imageUrl.length===0 && (theme==="dark" || theme=="system") && "invert"} ${dog.imageUrl.length===0 ? "object-contain" : "object-cover"}`}
 						/>
 						<div className="p-4 flex flex-col gap-2 h-1/2 justify-evenly">
 							<div className="w-full flex justify-between items-center">
