@@ -52,8 +52,7 @@ export default function AddDogPage() {
 		if (!form.description.trim())
 			newErrors.description = "Description is required.";
 		if (!form.breedId) newErrors.breedId = "Please select a breed.";
-		if (form.imageUrl.length === 0)
-			newErrors.imageUrl = "Please upload at least one image.";
+	
 
 		setErrors(newErrors);
 		return Object.keys(newErrors).length === 0;

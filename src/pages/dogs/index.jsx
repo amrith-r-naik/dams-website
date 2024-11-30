@@ -186,7 +186,7 @@ const DogsPage = () => {
 							width={500}
 							height={500}
 							className={`w-full h-48 rounded-lg mb-4 ${
-								dog.imageUrl.length === 0 && theme === "dark" && "invert"
+								dog.imageUrl.length === 0 && (theme === "dark" || theme === "system") && "invert"
 							} ${
 								dog.imageUrl.length === 0 ? "object-contain" : "object-cover"
 							}`}
