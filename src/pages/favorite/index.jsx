@@ -32,7 +32,7 @@ export default function FavoriteDogsList() {
 
 	const deleteFavorite = async (dogId) => {
 		try {
-			const response = await fetch(`/api/favourite/${dogId}`, {
+			const response = await fetch(`/api/favorite/${dogId}`, {
 				method: "DELETE",
 			});
 			if (!response.ok) {
