@@ -16,7 +16,7 @@ const geistMono = localFont({
 const Layout = ({ children }) => {
 	return (
 		<>
-			<MainNav className="w-full px-8 py-3 border-b border-b-border" />
+			<MainNav className="w-full py-3 border-b border-b-border" />
 			<main
 				className={`${geistMono.variable} ${geistSans.variable} flex min-h-[89vh] w-full`}
 			>

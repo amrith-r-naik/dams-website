@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Loader from "@/components/ui/loader";
 
 const ManageDogsPage = () => {
 	const [dogs, setDogs] = useState([]);
@@ -69,8 +70,8 @@ const ManageDogsPage = () => {
 
 	if (loading)
 		return (
-			<div className="flex w-full h-full items-center justify-center bg-background">
-				<p className="text-lg font-semibold text-muted">Loading...</p>
+			<div className="w-full min-h-full flex items-center justify-center">
+				<Loader />
 			</div>
 		);
 

@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
+import Loader from "@/components/ui/loader";
 
 const DogsPage = () => {
 	const [dogs, setDogs] = useState([]);
@@ -107,7 +108,12 @@ const DogsPage = () => {
 		}
 	};
 
-	if (loading) return <p>Loading...</p>;
+	if (loading)
+		return (
+			<div className="w-full min-h-full flex items-center justify-center">
+				<Loader />
+			</div>
+		);
 
 	return (
 		<div className="w-full h-full p-8 bg-background text-foreground">
@@ -170,7 +176,11 @@ const DogsPage = () => {
 							alt={dog.name}
 							width={500}
 							height={500}
-							className={`w-full h-48 rounded-lg mb-4 ${dog.imageUrl.length===0 && theme==="dark" && "invert"} ${dog.imageUrl.length===0 ? "object-contain" : "object-cover"}`}
+							className={`w-full h-48 rounded-lg mb-4 ${
+								dog.imageUrl.length === 0 && theme === "dark" && "invert"
+							} ${
+								dog.imageUrl.length === 0 ? "object-contain" : "object-cover"
+							}`}
 						/>
 						<div className="p-4 flex flex-col gap-2 h-1/2 justify-evenly">
 							<div className="w-full flex justify-between items-center">
