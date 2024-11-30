@@ -91,11 +91,11 @@ const DogsPage = () => {
 		const isFavorite = favorites.includes(dogId);
 		try {
 			if (isFavorite) {
-				await fetch(`/api/favorite/${dogId}`, { method: "DELETE" });
 				setFavorites(favorites.filter((id) => id !== dogId));
+				await fetch(`/api/favorite/${dogId}`, { method: "DELETE" });
 			} else {
-				await fetch(`/api/favorite/${dogId}`, { method: "POST" });
 				setFavorites([...favorites, dogId]);
+				await fetch(`/api/favorite/${dogId}`, { method: "POST" });
 			}
 		} catch (error) {
 			console.error(
