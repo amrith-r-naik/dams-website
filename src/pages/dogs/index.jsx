@@ -172,9 +172,7 @@ const DogsPage = () => {
 						<p className="text-lg font-medium text-muted-foreground">
 							🐾 No Dogs Found
 						</p>
-						<p className="text-sm text-muted-foreground mt-2">
-							Try adjusting your filters or come back later.
-						</p>
+						
 					</div>
 				)}
 				{filteredDogs.map((dog) => (

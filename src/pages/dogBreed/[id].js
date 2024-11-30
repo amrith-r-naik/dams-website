@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Loader from "@/components/ui/loader";
+import { useTheme } from "next-themes";
 
 const BreedDetailsPage = () => {
 	const router = useRouter();
 	const { id } = router.query; // Get the Breed ID from the URL
 	const [breed, setBreed] = useState(null);
 	const [loading, setLoading] = useState(true);
+	const {theme} = useTheme();
 
 	useEffect(() => {
 		if (!id) return;
@@ -55,11 +57,11 @@ const BreedDetailsPage = () => {
 						>
 							{/* Image */}
 							<Image
-								src={dog.imageUrl[0] || "/placeholder-image.jpg"}
+								src={dog.imageUrl[0] || "/placeholder-image-dog.png"}
 								alt={dog.name}
 								width={500}
 								height={500}
-								className="w-full h-48 object-cover rounded-t-lg"
+								className={`w-full h-48 rounded-lg mb-4 ${dog.imageUrl.length===0 && (theme==="dark" || theme==="system") && "invert"} ${dog.imageUrl.length===0 ? "object-contain" : "object-cover"}`}
 							/>
 							{/* Dog Details */}
 							<div className="p-4 flex flex-col gap-2">
