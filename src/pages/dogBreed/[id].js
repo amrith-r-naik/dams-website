@@ -42,38 +42,55 @@ const BreedDetailsPage = () => {
 	if (!breed) return <p>Breed not found</p>;
 
 	return (
-		<div className="container mx-auto p-8">
-			<h2 className="text-2xl font-semibold mt-6">Dogs in Breed</h2>
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+		<div className="container mx-auto p-8 bg-background text-foreground">
+			<h2 className="text-3xl font-bold text-center mb-8">
+				Dogs of Breed {breed.name}
+			</h2>
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
 				{breed.dogs && breed.dogs.length > 0 ? (
 					breed.dogs.map((dog) => (
 						<div
 							key={dog.id}
-							className="card bg-gray-100 border border-gray-300 shadow-md p-4 rounded-lg"
+							className="relative card bg-card border border-border shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105"
 						>
-							<h3 className="text-lg font-semibold">{dog.name}</h3>
+							{/* Image */}
 							<Image
 								src={dog.imageUrl[0] || "/placeholder-image.jpg"}
 								alt={dog.name}
 								width={500}
 								height={500}
-								className="w-full h-48 object-cover rounded-lg mb-4"
+								className="w-full h-48 object-cover rounded-t-lg"
 							/>
-							<p>Age: {dog.age}</p>
-							<p>Status: {dog.status}</p>
-							<p>Description: {dog.description}</p>
-							<Link
-								href={`/dogs/${dog.id}`}
-								className="text-primary hover:underline mt-2 block text-center"
-							>
-								View More
-							</Link>
+							{/* Dog Details */}
+							<div className="p-4 flex flex-col gap-2">
+								<h3 className="text-lg font-semibold text-card-foreground">
+									{dog.name}
+								</h3>
+								<p className="text-sm text-muted-foreground">
+									<span className="font-medium">Age:</span> {dog.age} years
+								</p>
+								<p className="text-sm text-muted-foreground">
+									<span className="font-medium">Status:</span> {dog.status}
+								</p>
+								<p className="text-sm text-muted-foreground line-clamp-2">
+									<span className="font-medium">Description:</span>{" "}
+									{dog.description || "No description available."}
+								</p>
+								<Link
+									href={`/dogs/${dog.id}`}
+									className="text-sm font-medium rounded-lg text-primary hover:underline mt-2 self-start border px-4 py-2"
+								>
+									View More →
+								</Link>
+							</div>
 						</div>
 					))
 				) : (
-					<p className="col-span-full text-center">
-						No dogs found in this Breed.
-					</p>
+					<div className="col-span-full flex flex-col items-center justify-center py-16">
+						<p className="text-lg font-medium text-muted-foreground">
+							🐾 No Dogs Of This Breed Found
+						</p>
+					</div>
 				)}
 			</div>
 		</div>
