@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/router";
+import { useTheme } from "next-themes";
 
 export default function FavoriteDogsList() {
 	const [favorites, setFavorites] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const router = useRouter();
+	const {theme} = useTheme();
 
 	useEffect(() => {
 		const fetchFavorites = async () => {
@@ -85,11 +87,13 @@ export default function FavoriteDogsList() {
 							onClick={() => router.push(`/dogs/${fav.dogId}`)}
 						>
 							<Image
-								src={fav.dog.imageUrl[0] || "/placeholder-image.jpg"}
+								src={fav.dog.imageUrl[0] || "/placeholder-image-dog.png"}
 								alt={fav.dog.name}
 								width={100}
 								height={100}
-								className="w-20 h-20 object-cover rounded-lg cursor-pointer"
+								className={`w-20 h-20 object-cover rounded-lg cursor-pointer ${
+									fav.dog.imageUrl.length === 0 && (theme === "dark" || theme === "system") && "invert"
+								}`}
 								onClick={() => {
 									router.push(`/dogs/${fav.dog.id}`);
 								}}
