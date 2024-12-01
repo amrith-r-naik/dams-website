@@ -93,6 +93,7 @@ export default function Adoptions() {
 						<th className="border border-gray-300 p-2">Adoption ID</th>
 						<th className="border border-gray-300 p-2">Dog Name</th>
 						<th className="border border-gray-300 p-2">Dog breed</th>
+						<th className="border border-gray-300 p-2">Description</th>
 						<th className="border border-gray-300 p-2">Applicant</th>
 						<th className="border border-gray-300 p-2">Status</th>
 						<th className="border border-gray-300 p-2">Actions</th>
@@ -107,6 +108,9 @@ export default function Adoptions() {
 							</td>
 							<td className="border border-gray-300 p-2">
 								{adoption.dog.breed.name}
+							</td>
+							<td className="border border-gray-300 p-2">
+								{adoption.dog.description}
 							</td>
 							<td className="border border-gray-300 p-2">
 								{adoption.user.name}
