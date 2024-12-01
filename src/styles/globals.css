@@ -23,18 +23,49 @@
 		--border: 72 20% 80%; /* #CCD5AE */
 		--input: 72 20% 80%; /* #CCD5AE */
 		--ring: 30 50% 64%; /* Matches primary */
-		--radius: 0.5rem;
 		--chart-1: 45 76% 61%; /* Soft yellow */
 		--chart-2: 145 58% 39%; /* Soft green */
 		--chart-3: 200 37% 24%; /* Slate blue */
 		--chart-4: 30 74% 66%; /* Peach */
 		--chart-5: 15 87% 67%; /* Coral */
+
+		/* New light theme colors */
+		/* --background: 36 39% 88%;
+		--foreground: 36 45% 15%;
+		--primary: 36 45% 70%;
+		--primary-foreground: 36 45% 11%;
+		--secondary: 40 35% 77%;
+		--secondary-foreground: 36 45% 25%;
+		--accent: 36 64% 57%;
+		--accent-foreground: 36 72% 17%;
+		--destructive: 0 84% 37%;
+		--destructive-foreground: 0 0% 98%;
+		--muted: 36 33% 75%;
+		--muted-foreground: 36 45% 25%;
+		--card: 36 46% 82%;
+		--card-foreground: 36 45% 20%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 240 10% 3.9%;
+		--border: 36 45% 60%;
+		--input: 36 45% 60%;
+		--ring: 36 45% 30%;
+		--chart-1: 25 34% 28%;
+		--chart-2: 26 36% 34%;
+		--chart-3: 28 40% 40%;
+		--chart-4: 31 41% 48%;
+		--chart-5: 35 43% 53%; */
+
+		--radius: 0.5rem;
 		--sidebar-background: var(--card); /* Matches card background */
 		--sidebar-foreground: var(--card-foreground); /* Matches card text color */
 		--sidebar-primary: var(--primary); /* Matches primary color */
-		--sidebar-primary-foreground: var(--primary-foreground); /* Matches primary text color */
+		--sidebar-primary-foreground: var(
+			--primary-foreground
+		); /* Matches primary text color */
 		--sidebar-accent: var(--accent); /* Matches accent color */
-		--sidebar-accent-foreground: var(--accent-foreground); /* Matches accent text color */
+		--sidebar-accent-foreground: var(
+			--accent-foreground
+		); /* Matches accent text color */
 		--sidebar-border: var(--border); /* Matches border color */
 		--sidebar-ring: var(--ring); /* Matches ring color */
 	}
@@ -67,16 +98,20 @@
 		--sidebar-background: var(--card); /* Matches card background */
 		--sidebar-foreground: var(--card-foreground); /* Matches card text color */
 		--sidebar-primary: var(--primary); /* Matches primary color */
-		--sidebar-primary-foreground: var(--primary-foreground); /* Matches primary text color */
+		--sidebar-primary-foreground: var(
+			--primary-foreground
+		); /* Matches primary text color */
 		--sidebar-accent: var(--accent); /* Matches accent color */
-		--sidebar-accent-foreground: var(--accent-foreground); /* Matches accent text color */
+		--sidebar-accent-foreground: var(
+			--accent-foreground
+		); /* Matches accent text color */
 		--sidebar-border: var(--border); /* Matches border color */
 		--sidebar-ring: var(--ring); /* Matches ring color */
 	}
 }
 
 @layer base {
-	*  {
+	* {
 		@apply border-border;
 	}
 	body {
