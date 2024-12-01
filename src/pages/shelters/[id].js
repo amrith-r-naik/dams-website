@@ -51,7 +51,7 @@ const ShelterDetailsPage = () => {
 	return (
 		<div className="container mx-auto p-8 bg-background text-foreground">
 			<div className="text-center mb-10">
-				<h1 className={`text-3xl font-bold ${theme ==="dark" && theme === "system"? "invert" : ""} text-primary-foreground"`}>
+				<h1 className="text-3xl font-bold text-foreground">
 					{shelter.name}
 				</h1>
 				<p className="text-card-foreground/70 mt-2">{shelter.address}</p>
