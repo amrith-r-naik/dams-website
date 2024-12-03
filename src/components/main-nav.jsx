@@ -88,7 +88,7 @@ export function MainNav({ className }) {
 					</Button>
 
 					{/* Favorites Page Button */}
-					{session?.user?.role === "SHELTER_STAFF" && (
+					{session && (
 						<Button
 							variant="ghost"
 							size="sm"
@@ -118,19 +118,35 @@ export function MainNav({ className }) {
 							Dashboard
 						</Link>
 					)}
+					{/* Shelter Dashboard Page Button */}
+					{session?.user?.role === "USER" && (
+						<Link
+							href="/userDashboard"
+							className={cn(
+								"transition-colors hover:text-primary hover:border-primary border border-secondary rounded-full px-3 py-1",
+								pathname?.startsWith("/userDashboard")
+									? "text-primary"
+									: "text-accent"
+							)}
+						>
+							Dashboard
+						</Link>
+					)}
 					{/* My adoptions Page Button */}
-					<Button
-						variant="ghost"
-						size="sm"
-						className={
-							pathname === "/myAdoptions"
-								? "text-primary"
-								: "text-muted-foreground"
-						}
-						onClick={() => router.push("/myAdoptions")}
-					>
-						<p>My Adoptions</p>
-					</Button>
+					{session && (
+						<Button
+							variant="ghost"
+							size="sm"
+							className={
+								pathname === "/myAdoptions"
+									? "text-primary"
+									: "text-muted-foreground"
+							}
+							onClick={() => router.push("/myAdoptions")}
+						>
+							<p>My Adoptions</p>
+						</Button>
+					)}
 				</nav>
 
 				{/* Theme toggle button and sign-in/logout button*/}

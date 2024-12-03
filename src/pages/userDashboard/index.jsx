@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import Layout from "../layout";
-import Loader from "@/components/ui/loader";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
 import {
 	Card,
 	CardContent,
@@ -14,11 +16,10 @@ import {
 import { Button } from "@/components/ui/button";
 
 const UserDashboard = () => {
-	const [user, setUser] = useState(null); // user is a single object, not an array
+	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null); // Error state
-
-	const router = useRouter();
+	const [error, setError] = useState(null);
+	const [isDialogOpen, setIsDialogOpen] = useState(false); // Dialog state for update
 
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -27,7 +28,7 @@ const UserDashboard = () => {
 				const data = await response.json();
 				if (!response.ok) throw new Error(data.error || "Failed to fetch user");
 				setUser(data.user);
-			} catch (error) {
+			} catch (err) {
 				console.error("Error fetching user:", err);
 				setError(err.message);
 			} finally {
@@ -37,6 +38,7 @@ const UserDashboard = () => {
 
 		fetchUser();
 	}, []);
+
 	const handleUpdate = async (e) => {
 		e.preventDefault();
 		try {
@@ -46,7 +48,8 @@ const UserDashboard = () => {
 				body: JSON.stringify(user),
 			});
 			if (!res.ok) throw new Error("Failed to update user");
-			alert("user updated successfully!");
+			alert("User updated successfully!");
+			setIsDialogOpen(false); // Close dialog after update
 		} catch (error) {
 			console.error("Error updating user:", error);
 			alert("Error updating user");
@@ -55,63 +58,70 @@ const UserDashboard = () => {
 
 	if (loading)
 		return (
-			<div className="flex w-full items-center justify-center min-h-screen bg-background">
-				<Loader className="w-8 h-8 text-primary animate-spin" />
+			<div className="flex items-center justify-center min-h-screen">
+				<div className="loader" />
 			</div>
 		);
-	if (error) return <p>Error: {error}</p>;
+
+	if (error)
+		return (
+			<div className="flex items-center justify-center min-h-screen">
+				<p>{error}</p>
+			</div>
+		);
+
 	if (!user)
 		return (
-			<div className="flex items-center justify-center min-h-screen bg-background text-muted-foreground">
+			<div className="flex items-center justify-center min-h-screen">
 				<p>No user data available</p>
 			</div>
 		);
 
 	return (
-		<div className="min-h-screen bg-background text-foreground">
-			<div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
-				<Card className="bg-card border border-border shadow-xl rounded-lg p-6 mx-auto max-w-lg transition-transform hover:scale-[1.02]">
-					<CardHeader>
-						<CardTitle className="text-2xl font-bold text-card-foreground">
-							{user.name}
-						</CardTitle>
-						<CardDescription className="text-sm text-muted-foreground">
-							email Address: {user.email}
-						</CardDescription>
+		<div className="min-h-screen">
+			<div className="container mx-auto py-12 px-6">
+				<Card className="shadow-lg rounded-lg p-6 mx-auto max-w-md">
+					<CardHeader className="flex justify-between items-center">
+						<div>
+							<CardTitle className="text-xl font-bold">{user.name}</CardTitle>
+							<Button variant="outline" onClick={() => setIsDialogOpen(true)}>
+								Edit user name
+							</Button>
+							<CardDescription>Email Address: {user.email}</CardDescription>
+						</div>
 					</CardHeader>
-					<CardContent className="space-y-4">
-						<p className="text-card-foreground">
+					<CardContent>
+						<p>
 							<strong>Role:</strong> {user.role}
 						</p>
 					</CardContent>
-					<CardFooter className="mt-6">
-						{/* <Link href={`/userDashboard/user-details/${user.id}`}>
-							<Button
-								variant="primary"
-								className="w-full py-3 text-sm font-medium"
-							>
-								Edit user Details
-							</Button>
-						</Link> */}
-					</CardFooter>
+					<CardFooter />
 				</Card>
 			</div>
-			<form onSubmit={handleUpdate}>
-				<h1>Update user</h1>
-				<input
-					value={user.name || ""}
-					onChange={(e) => setUser({ ...user, name: e.target.value })}
-					placeholder="user Name"
-				/>
 
-				<button type="submit">Update user</button>
-			</form>
+			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Update User</DialogTitle>
+					</DialogHeader>
+					<form onSubmit={handleUpdate} className="space-y-4">
+						<div>
+							<label className="block text-sm font-medium">Name</label>
+							<input
+								className="w-full border rounded-lg px-4 py-2"
+								value={user.name || ""}
+								onChange={(e) => setUser({ ...user, name: e.target.value })}
+								placeholder="User Name"
+							/>
+						</div>
+						<Button type="submit" className="w-full">
+							Update User name
+						</Button>
+					</form>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 };
 
-// export default withRoleProtection(UserDashboard, ["USER"]);
 export default UserDashboard;
-UserDashboard.getLayout = function getLayout(page) {
-	return <Layout>{page}</Layout>;
-};
