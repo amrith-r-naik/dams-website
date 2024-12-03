@@ -31,11 +31,27 @@ export default async function handler(req, res) {
 	if (req.method === "GET") {
 		try {
 			const session = await getServerSession(req, res, authOptions);
-
+			const { user } = req.query;
+			console.log(user);
 			if (!session) {
 				return res.status(401).json({ message: "Unauthorized" });
 			}
 
+			if (user === "true") {
+				const adoptions = await prisma.adoption.findMany({
+					where: { userId: session.user.id },
+					include: {
+						dog: {
+							include: {
+								breed: true,
+							},
+						},
+						user: true,
+					},
+				});
+
+				return res.status(200).json(adoptions);
+			}
 			const shelter = await prisma.shelter.findUnique({
 				where: { staffId: session.user.id },
 			});
