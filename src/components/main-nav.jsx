@@ -118,6 +118,19 @@ export function MainNav({ className }) {
 							Dashboard
 						</Link>
 					)}
+					{/* My adoptions Page Button */}
+					<Button
+						variant="ghost"
+						size="sm"
+						className={
+							pathname === "/myAdoptions"
+								? "text-primary"
+								: "text-muted-foreground"
+						}
+						onClick={() => router.push("/myAdoptions")}
+					>
+						<p>My Adoptions</p>
+					</Button>
 				</nav>
 
 				{/* Theme toggle button and sign-in/logout button*/}
