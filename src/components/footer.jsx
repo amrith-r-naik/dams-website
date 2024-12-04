@@ -21,7 +21,7 @@ const Footer = () => {
 				</div>
 
 				{/* Navigation links */}
-				<div className="flex flex-col md:flex-row gap-4 text-center md:text-left">
+				<div className="flex flex-col md:flex-row gap-12 text-center md:text-left">
 					<Link href="#hero" className="hover:text-primary">
 						Home
 					</Link>
