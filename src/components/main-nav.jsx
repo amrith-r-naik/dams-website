@@ -103,6 +103,21 @@ export function MainNav({ className }) {
 							<p>My Favorites</p>
 						</Button>
 					)}
+					{/* My adoptions Page Button */}
+					{session && (
+						<Button
+							variant="ghost"
+							size="sm"
+							className={
+								pathname === "/myAdoptions"
+									? "text-primary"
+									: "text-muted-foreground"
+							}
+							onClick={() => router.push("/myAdoptions")}
+						>
+							<p>My Adoptions</p>
+						</Button>
+					)}
 
 					{/* Shelter Dashboard Page Button */}
 					{session?.user?.role === "SHELTER_STAFF" && (
@@ -131,21 +146,6 @@ export function MainNav({ className }) {
 						>
 							Dashboard
 						</Link>
-					)}
-					{/* My adoptions Page Button */}
-					{session && (
-						<Button
-							variant="ghost"
-							size="sm"
-							className={
-								pathname === "/myAdoptions"
-									? "text-primary"
-									: "text-muted-foreground"
-							}
-							onClick={() => router.push("/myAdoptions")}
-						>
-							<p>My Adoptions</p>
-						</Button>
 					)}
 				</nav>
 

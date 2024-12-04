@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import { useTheme } from "next-themes";
+
 export default function Adoptions() {
 	const [adoptions, setAdoptions] = useState([]);
 	const [error, setError] = useState("");
@@ -44,16 +45,26 @@ export default function Adoptions() {
 		return groups;
 	}, {});
 
+	// Filter out statuses with no content
+	const nonEmptyStatuses = Object.keys(groupedAdoptions).filter(
+		(status) => groupedAdoptions[status].length > 0
+	);
+
 	return (
 		<div className="container mx-auto p-6">
 			<h1 className="text-2xl font-bold mb-4">Adoptions by Status</h1>
 
 			{error && <p className="text-red-500 mb-4">{error}</p>}
 
-			{Object.keys(groupedAdoptions).map((status) => (
-				<div key={status} className="mb-8">
-					<h2 className="text-xl font-semibold mb-4">{status}</h2>
-					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+			<div
+				className={`grid gap-6`}
+				style={{
+					gridTemplateColumns: `repeat(${nonEmptyStatuses.length}, minmax(0, 1fr))`,
+				}}
+			>
+				{nonEmptyStatuses.map((status) => (
+					<div key={status} className="flex flex-col space-y-4">
+						<h2 className="text-xl font-semibold text-center">{status}</h2>
 						{groupedAdoptions[status].map((adoption) => (
 							<Card key={adoption.id} className="shadow-md">
 								<CardHeader>
@@ -82,19 +93,14 @@ export default function Adoptions() {
 									<p className="text-sm text-gray-500 mb-2">
 										<strong>Breed:</strong> {adoption.dog.breed.name}
 									</p>
-
 									<p className="text-sm text-gray-500 mb-2">
 										<strong>Shelter:</strong> {adoption.dog.shelter.name}
-									</p>
-
-									<p className="text-sm text-gray-500 mb-4">
-										<strong>Status:</strong> {adoption.status}
 									</p>
 								</CardContent>
 								{adoption.status === "APPROVED" && (
 									<CardFooter>
 										<p className="text-sm text-muted-foreground">
-											Please contact this number :
+											Contact:{" "}
 											<strong>{adoption.dog.shelter.phoneNumber}</strong>
 										</p>
 									</CardFooter>
@@ -102,8 +108,8 @@ export default function Adoptions() {
 							</Card>
 						))}
 					</div>
-				</div>
-			))}
+				))}
+			</div>
 		</div>
 	);
 }

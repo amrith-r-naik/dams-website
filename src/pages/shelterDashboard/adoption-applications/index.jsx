@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Layout from "../layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
 	Select,
@@ -14,7 +13,7 @@ import { useTheme } from "next-themes";
 
 export default function Adoptions() {
 	const [adoptions, setAdoptions] = useState([]);
-	const [loadingAdoptions, setLoadingAdoptions] = useState({}); // Track loading state for each adoption
+	const [loadingAdoptions, setLoadingAdoptions] = useState({});
 	const [error, setError] = useState("");
 	const { theme } = useTheme();
 
@@ -41,7 +40,7 @@ export default function Adoptions() {
 
 	// Update adoption status
 	const updateStatus = async (adoptionId, newStatus) => {
-		setLoadingAdoptions((prev) => ({ ...prev, [adoptionId]: true })); // Set loading for specific adoption
+		setLoadingAdoptions((prev) => ({ ...prev, [adoptionId]: true }));
 		try {
 			const response = await fetch("/api/adoption", {
 				method: "PATCH",
@@ -63,13 +62,13 @@ export default function Adoptions() {
 			console.error(error);
 			setError(error.message);
 		} finally {
-			setLoadingAdoptions((prev) => ({ ...prev, [adoptionId]: false })); // Reset loading for specific adoption
+			setLoadingAdoptions((prev) => ({ ...prev, [adoptionId]: false }));
 		}
 	};
 
 	// Delete adoption
 	const deleteAdoption = async (adoptionId) => {
-		setLoadingAdoptions((prev) => ({ ...prev, [adoptionId]: true })); // Set loading for specific adoption
+		setLoadingAdoptions((prev) => ({ ...prev, [adoptionId]: true }));
 		try {
 			const response = await fetch("/api/adoption", {
 				method: "DELETE",
@@ -88,74 +87,91 @@ export default function Adoptions() {
 			console.error(error);
 			setError(error.message);
 		} finally {
-			setLoadingAdoptions((prev) => ({ ...prev, [adoptionId]: false })); // Reset loading for specific adoption
+			setLoadingAdoptions((prev) => ({ ...prev, [adoptionId]: false }));
 		}
 	};
 
 	// Group adoptions by status
-	const statuses = ["PENDING", "APPROVED", "REJECTED"];
-	const groupedAdoptions = statuses.map((status) => {
-		return {
-			status,
-			adoptions: adoptions.filter((adoption) => adoption.status === status),
-		};
-	});
+	const groupedAdoptions = adoptions.reduce((groups, adoption) => {
+		const { status } = adoption;
+		if (!groups[status]) {
+			groups[status] = [];
+		}
+		groups[status].push(adoption);
+		return groups;
+	}, {});
 
 	return (
 		<div className="container mx-auto p-6">
-			<h1 className="text-2xl font-bold mb-4">Adoptions by Status</h1>
+			<h1 className="text-2xl font-bold mb-4">Adoptions</h1>
 
 			{error && <p className="text-red-500 mb-4">{error}</p>}
 
-			{groupedAdoptions.map((group) => (
-				<div key={group.status} className="mb-8">
-					<h2 className="text-xl font-semibold mb-4">{group.status}</h2>
-					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-						{group.adoptions.length === 0 ? (
-							<p className="col-span-full text-center text-muted-foreground">
-								No adoptions in this category.
-							</p>
-						) : (
-							group.adoptions.map((adoption) => (
-								<Card key={adoption.id} className="shadow-md">
-									<CardHeader>
-										<CardTitle className="text-lg font-bold">
+			{Object.keys(groupedAdoptions).map((status) => (
+				<div key={status} className="mb-8">
+					<h2 className="text-xl font-semibold mb-4 capitalize">
+						{status === "PENDING"
+							? "Pending Adoptions"
+							: status === "APPROVED"
+							? "Approved Adoptions"
+							: "Rejected Adoptions"}
+					</h2>
+					<table className="min-w-full border-collapse border border-gray-200">
+						<thead>
+							<tr>
+								<th className="border border-gray-300 px-4 py-2">Image</th>
+								<th className="border border-gray-300 px-4 py-2">Dog Name</th>
+								<th className="border border-gray-300 px-4 py-2">Breed</th>
+								<th className="border border-gray-300 px-4 py-2">Applicant</th>
+								<th className="border border-gray-300 px-4 py-2">Status</th>
+								<th className="border border-gray-300 px-4 py-2">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{groupedAdoptions[status].length === 0 ? (
+								<tr>
+									<td colSpan="6" className="text-center text-gray-500 py-4">
+										No adoptions found.
+									</td>
+								</tr>
+							) : (
+								groupedAdoptions[status].map((adoption) => (
+									<tr key={adoption.id}>
+										<td className="border border-gray-300 px-4 py-2">
+											<Image
+												src={
+													adoption.dog.imageUrl[0] ||
+													"/placeholder-image-dog.png"
+												}
+												alt={adoption.dog.name}
+												width={100}
+												height={100}
+												className={`rounded ${
+													adoption.dog.imageUrl.length === 0 &&
+													(theme === "dark" || theme === "system") &&
+													"invert"
+												} ${
+													adoption.dog.imageUrl.length === 0
+														? "object-contain"
+														: "object-cover"
+												}`}
+											/>
+										</td>
+										<td className="border border-gray-300 px-4 py-2">
 											{adoption.dog.name}
-										</CardTitle>
-									</CardHeader>
-									<CardContent>
-										<Image
-											src={
-												adoption.dog.imageUrl[0] || "/placeholder-image-dog.png"
-											}
-											alt={adoption.dog.name}
-											width={500}
-											height={500}
-											className={`w-full h-48 rounded-lg mb-4 ${
-												adoption.dog.imageUrl.length === 0 &&
-												(theme === "dark" || theme === "system") &&
-												"invert"
-											} ${
-												adoption.dog.imageUrl.length === 0
-													? "object-contain"
-													: "object-cover"
-											}`}
-										/>
-										<p className="text-sm text-gray-500 mb-2">
-											<strong>Breed:</strong> {adoption.dog.breed.name}
-										</p>
-										<p className="text-sm text-gray-500 mb-2">
-											<strong>Description:</strong> {adoption.dog.description}
-										</p>
-										<p className="text-sm text-gray-500 mb-2">
-											<strong>Applicant:</strong> {adoption.user.name}
-										</p>
-										<div className="flex space-x-2 items-center mt-4">
+										</td>
+										<td className="border border-gray-300 px-4 py-2">
+											{adoption.dog.breed.name}
+										</td>
+										<td className="border border-gray-300 px-4 py-2">
+											{adoption.user.name}
+										</td>
+										<td className="border border-gray-300 px-4 py-2">
 											<Select
-												value={adoption.status} // Bind the selected value to the status
-												onValueChange={(newStatus) => {
-													updateStatus(adoption.id, newStatus); // Immediately update adoption status
-												}}
+												value={adoption.status}
+												onValueChange={(newStatus) =>
+													updateStatus(adoption.id, newStatus)
+												}
 											>
 												<SelectTrigger>
 													<SelectValue placeholder="Select Status" />
@@ -166,22 +182,23 @@ export default function Adoptions() {
 													<SelectItem value="REJECTED">Rejected</SelectItem>
 												</SelectContent>
 											</Select>
-
+										</td>
+										<td className="border border-gray-300 px-4 py-2">
 											<Button
 												variant="destructive"
 												onClick={() => deleteAdoption(adoption.id)}
-												disabled={loadingAdoptions[adoption.id]} // Disable based on specific adoption loading state
+												disabled={loadingAdoptions[adoption.id]}
 											>
 												{loadingAdoptions[adoption.id]
 													? "Deleting..."
 													: "Delete"}
 											</Button>
-										</div>
-									</CardContent>
-								</Card>
-							))
-						)}
-					</div>
+										</td>
+									</tr>
+								))
+							)}
+						</tbody>
+					</table>
 				</div>
 			))}
 		</div>
