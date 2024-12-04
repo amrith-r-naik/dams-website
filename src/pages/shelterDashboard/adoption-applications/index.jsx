@@ -8,6 +8,15 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import {
+	Table,
+	TableBody,
+	TableCaption,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import {
@@ -102,29 +111,29 @@ export default function Adoptions() {
 
 			{error && <p className="text-red-500 mb-4">{error}</p>}
 
-			<table className="min-w-full border-collapse border border-gray-200">
-				<thead>
-					<tr>
-						<th className="border border-gray-300 px-4 py-2">Image</th>
-						<th className="border border-gray-300 px-4 py-2">Dog Name</th>
-						<th className="border border-gray-300 px-4 py-2">message</th>
-						<th className="border border-gray-300 px-4 py-2">Breed</th>
-						<th className="border border-gray-300 px-4 py-2">Applicant</th>
-						<th className="border border-gray-300 px-4 py-2">Status</th>
-						<th className="border border-gray-300 px-4 py-2">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
+			<Table>
+				<TableHeader>
+					<TableRow>
+						<TableHead className="border px-4 py-2">Image</TableHead>
+						<TableHead className="border px-4 py-2">Dog Name</TableHead>
+						<TableHead className="border px-4 py-2">Message</TableHead>
+						<TableHead className="border px-4 py-2">Breed</TableHead>
+						<TableHead className="border px-4 py-2">Applicant</TableHead>
+						<TableHead className="border px-4 py-2">Status</TableHead>
+						<TableHead className="border px-4 py-2">Actions</TableHead>
+					</TableRow>
+				</TableHeader>
+				<TableBody className="rounded-md">
 					{adoptions.length === 0 ? (
-						<tr>
-							<td colSpan="6" className="text-center text-gray-500 py-4">
+						<TableRow>
+							<TableCell colSpan={7} className="text-center text-gray-500 py-4">
 								No adoptions found.
-							</td>
-						</tr>
+							</TableCell>
+						</TableRow>
 					) : (
 						adoptions.map((adoption) => (
-							<tr key={adoption.id}>
-								<td className="border border-gray-300 px-4 py-2">
+							<TableRow key={adoption.id}>
+								<TableCell className="border px-4 py-2">
 									<Image
 										src={
 											adoption.dog.imageUrl[0] || "/placeholder-image-dog.png"
@@ -142,11 +151,11 @@ export default function Adoptions() {
 												: "object-cover"
 										}`}
 									/>
-								</td>
-								<td className="border border-gray-300 px-4 py-2">
+								</TableCell>
+								<TableCell className="border px-4 py-2">
 									{adoption.dog.name}
-								</td>
-								<td className="border border-gray-300 px-4 py-2">
+								</TableCell>
+								<TableCell className="border px-4 py-2">
 									<HoverCard>
 										<HoverCardTrigger>
 											<div className="w-12 truncate">
@@ -157,14 +166,14 @@ export default function Adoptions() {
 											{adoption.applicationForm}
 										</HoverCardContent>
 									</HoverCard>
-								</td>
-								<td className="border border-gray-300 px-4 py-2">
+								</TableCell>
+								<TableCell className="border px-4 py-2">
 									{adoption.dog.breed.name}
-								</td>
-								<td className="border border-gray-300 px-4 py-2">
+								</TableCell>
+								<TableCell className="border px-4 py-2">
 									{adoption.user.name}
-								</td>
-								<td className="border border-gray-300 px-4 py-2">
+								</TableCell>
+								<TableCell className="border px-4 py-2">
 									<Select
 										value={adoption.status}
 										onValueChange={(newStatus) =>
@@ -180,8 +189,8 @@ export default function Adoptions() {
 											<SelectItem value="REJECTED">Rejected</SelectItem>
 										</SelectContent>
 									</Select>
-								</td>
-								<td className="border border-gray-300 px-4 py-2">
+								</TableCell>
+								<TableCell className="border px-4 py-2">
 									<Button
 										variant="destructive"
 										onClick={() => deleteAdoption(adoption.id)}
@@ -189,12 +198,12 @@ export default function Adoptions() {
 									>
 										{loadingAdoptions[adoption.id] ? "Deleting..." : "Delete"}
 									</Button>
-								</td>
-							</tr>
+								</TableCell>
+							</TableRow>
 						))
 					)}
-				</tbody>
-			</table>
+				</TableBody>
+			</Table>
 		</div>
 	);
 }
