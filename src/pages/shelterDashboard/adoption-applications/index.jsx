@@ -10,6 +10,11 @@ import {
 } from "@/components/ui/select";
 import Image from "next/image";
 import { useTheme } from "next-themes";
+import {
+	HoverCard,
+	HoverCardContent,
+	HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 export default function Adoptions() {
 	const [adoptions, setAdoptions] = useState([]);
@@ -91,116 +96,105 @@ export default function Adoptions() {
 		}
 	};
 
-	// Group adoptions by status
-	const groupedAdoptions = adoptions.reduce((groups, adoption) => {
-		const { status } = adoption;
-		if (!groups[status]) {
-			groups[status] = [];
-		}
-		groups[status].push(adoption);
-		return groups;
-	}, {});
-
 	return (
 		<div className="container mx-auto p-6">
 			<h1 className="text-2xl font-bold mb-4">Adoptions</h1>
 
 			{error && <p className="text-red-500 mb-4">{error}</p>}
 
-			{Object.keys(groupedAdoptions).map((status) => (
-				<div key={status} className="mb-8">
-					<h2 className="text-xl font-semibold mb-4 capitalize">
-						{status === "PENDING"
-							? "Pending Adoptions"
-							: status === "APPROVED"
-							? "Approved Adoptions"
-							: "Rejected Adoptions"}
-					</h2>
-					<table className="min-w-full border-collapse border border-gray-200">
-						<thead>
-							<tr>
-								<th className="border border-gray-300 px-4 py-2">Image</th>
-								<th className="border border-gray-300 px-4 py-2">Dog Name</th>
-								<th className="border border-gray-300 px-4 py-2">Breed</th>
-								<th className="border border-gray-300 px-4 py-2">Applicant</th>
-								<th className="border border-gray-300 px-4 py-2">Status</th>
-								<th className="border border-gray-300 px-4 py-2">Actions</th>
+			<table className="min-w-full border-collapse border border-gray-200">
+				<thead>
+					<tr>
+						<th className="border border-gray-300 px-4 py-2">Image</th>
+						<th className="border border-gray-300 px-4 py-2">Dog Name</th>
+						<th className="border border-gray-300 px-4 py-2">message</th>
+						<th className="border border-gray-300 px-4 py-2">Breed</th>
+						<th className="border border-gray-300 px-4 py-2">Applicant</th>
+						<th className="border border-gray-300 px-4 py-2">Status</th>
+						<th className="border border-gray-300 px-4 py-2">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{adoptions.length === 0 ? (
+						<tr>
+							<td colSpan="6" className="text-center text-gray-500 py-4">
+								No adoptions found.
+							</td>
+						</tr>
+					) : (
+						adoptions.map((adoption) => (
+							<tr key={adoption.id}>
+								<td className="border border-gray-300 px-4 py-2">
+									<Image
+										src={
+											adoption.dog.imageUrl[0] || "/placeholder-image-dog.png"
+										}
+										alt={adoption.dog.name}
+										width={100}
+										height={100}
+										className={`rounded ${
+											adoption.dog.imageUrl.length === 0 &&
+											(theme === "dark" || theme === "system") &&
+											"invert"
+										} ${
+											adoption.dog.imageUrl.length === 0
+												? "object-contain"
+												: "object-cover"
+										}`}
+									/>
+								</td>
+								<td className="border border-gray-300 px-4 py-2">
+									{adoption.dog.name}
+								</td>
+								<td className="border border-gray-300 px-4 py-2">
+									<HoverCard>
+										<HoverCardTrigger>
+											<div className="w-12 truncate">
+												{adoption.applicationForm}
+											</div>
+										</HoverCardTrigger>
+										<HoverCardContent>
+											{adoption.applicationForm}
+										</HoverCardContent>
+									</HoverCard>
+								</td>
+								<td className="border border-gray-300 px-4 py-2">
+									{adoption.dog.breed.name}
+								</td>
+								<td className="border border-gray-300 px-4 py-2">
+									{adoption.user.name}
+								</td>
+								<td className="border border-gray-300 px-4 py-2">
+									<Select
+										value={adoption.status}
+										onValueChange={(newStatus) =>
+											updateStatus(adoption.id, newStatus)
+										}
+									>
+										<SelectTrigger>
+											<SelectValue placeholder="Select Status" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="PENDING">Pending</SelectItem>
+											<SelectItem value="APPROVED">Approved</SelectItem>
+											<SelectItem value="REJECTED">Rejected</SelectItem>
+										</SelectContent>
+									</Select>
+								</td>
+								<td className="border border-gray-300 px-4 py-2">
+									<Button
+										variant="destructive"
+										onClick={() => deleteAdoption(adoption.id)}
+										disabled={loadingAdoptions[adoption.id]}
+									>
+										{loadingAdoptions[adoption.id] ? "Deleting..." : "Delete"}
+									</Button>
+								</td>
 							</tr>
-						</thead>
-						<tbody>
-							{groupedAdoptions[status].length === 0 ? (
-								<tr>
-									<td colSpan="6" className="text-center text-gray-500 py-4">
-										No adoptions found.
-									</td>
-								</tr>
-							) : (
-								groupedAdoptions[status].map((adoption) => (
-									<tr key={adoption.id}>
-										<td className="border border-gray-300 px-4 py-2">
-											<Image
-												src={
-													adoption.dog.imageUrl[0] ||
-													"/placeholder-image-dog.png"
-												}
-												alt={adoption.dog.name}
-												width={100}
-												height={100}
-												className={`rounded ${
-													adoption.dog.imageUrl.length === 0 &&
-													(theme === "dark" || theme === "system") &&
-													"invert"
-												} ${
-													adoption.dog.imageUrl.length === 0
-														? "object-contain"
-														: "object-cover"
-												}`}
-											/>
-										</td>
-										<td className="border border-gray-300 px-4 py-2">
-											{adoption.dog.name}
-										</td>
-										<td className="border border-gray-300 px-4 py-2">
-											{adoption.dog.breed.name}
-										</td>
-										<td className="border border-gray-300 px-4 py-2">
-											{adoption.user.name}
-										</td>
-										<td className="border border-gray-300 px-4 py-2">
-											<Select
-												value={adoption.status}
-												onValueChange={(newStatus) =>
-													updateStatus(adoption.id, newStatus)
-												}
-											>
-												<SelectTrigger>
-													<SelectValue placeholder="Select Status" />
-												</SelectTrigger>
-												<SelectContent>
-													<SelectItem value="PENDING">Pending</SelectItem>
-													<SelectItem value="APPROVED">Approved</SelectItem>
-													<SelectItem value="REJECTED">Rejected</SelectItem>
-												</SelectContent>
-											</Select>
-										</td>
-										<td className="border border-gray-300 px-4 py-2">
-											<Button
-												variant="destructive"
-												onClick={() => deleteAdoption(adoption.id)}
-												disabled={loadingAdoptions[adoption.id]}
-											>
-												{loadingAdoptions[adoption.id]
-													? "Deleting..."
-													: "Delete"}
-											</Button>
-										</td>
-									</tr>
-								))
-							)}
-						</tbody>
-					</table>
-				</div>
-			))}
+						))
+					)}
+				</tbody>
+			</table>
 		</div>
 	);
 }

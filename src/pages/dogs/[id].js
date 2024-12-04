@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import {
@@ -32,6 +32,33 @@ export default function DogDetail({ dog }) {
 	const router = useRouter();
 	const [formData, setFormData] = useState({ applicationForm: "" });
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [hasApplied, setHasApplied] = useState(false);
+
+	useEffect(() => {
+		const fetchAdoptions = async () => {
+			if (!session) return;
+
+			try {
+				const response = await fetch("/api/adoption?user=true", {
+					method: "GET",
+				});
+				if (!response.ok) {
+					throw new Error("Failed to fetch adoptions");
+				}
+				const data = await response.json();
+
+				// Check if user has already applied for this specific dog
+				const alreadyApplied = data.some(
+					(application) => application.dogId === dog.id
+				);
+				setHasApplied(alreadyApplied);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		fetchAdoptions();
+	}, [session, dog.id]);
 
 	const handleAdoptionSubmit = async (e) => {
 		e.preventDefault();
@@ -71,7 +98,6 @@ export default function DogDetail({ dog }) {
 	return (
 		<div className="relative min-h-full w-full flex justify-center py-10 bg-background">
 			<Card className="flex flex-col bg-card rounded-lg shadow-md">
-				{/* Header Section */}
 				<CardHeader className="text-center border-b border-border p-6">
 					<CardTitle className="text-4xl font-extrabold text-primary">
 						{dog.name}
@@ -79,12 +105,9 @@ export default function DogDetail({ dog }) {
 				</CardHeader>
 
 				<CardContent className="flex gap-10 p-8 px-16 items-stretch">
-					{/* Left Section: Image Carousel */}
 					<div className="flex items-center w-[40vw] h-full">
 						<ImageSlider imageArray={dog.imageUrl} dog={dog} />
 					</div>
-
-					{/* Right Section: Dog Details */}
 					<div className="flex flex-col justify-evenly">
 						<div className="space-y-3 text-base text-muted-foreground">
 							<h2 className="font-bold text-accent">Details</h2>
@@ -105,7 +128,6 @@ export default function DogDetail({ dog }) {
 							</p>
 						</div>
 
-						{/* Shelter Details */}
 						<div className="space-y-3 text-base text-muted-foreground">
 							<h3 className="font-bold text-accent">Shelter Information</h3>
 							<p>
@@ -126,29 +148,45 @@ export default function DogDetail({ dog }) {
 							</p>
 						</div>
 
-						{/* Adoption Form */}
 						{session ? (
-							<form onSubmit={handleAdoptionSubmit} className="space-y-5 mt-8">
-								<Textarea
-									value={formData.applicationForm}
-									onChange={(e) =>
-										setFormData({
-											...formData,
-											applicationForm: e.target.value,
-										})
-									}
-									placeholder="Why do you want to adopt this dog?"
-									className="w-full text-base rounded-lg placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring p-3"
-									required
-								/>
-								<Button
-									type="submit"
-									className="w-full py-3 font-medium text-base rounded-lg bg-primary text-white hover:bg-primary-dark transition-all duration-300"
-									disabled={isSubmitting}
+							hasApplied ? (
+								<div>
+									<p className="mt-8 text-muted-foreground">
+										You have already applied to adopt this dog.
+									</p>
+									<button
+										onClick={() => router.push(`/myAdoptions`)}
+										className="text-sm font-medium rounded-lg text-primary hover:underline mt-2 self-start border px-4 py-2"
+									>
+										View My Adoptions
+									</button>
+								</div>
+							) : (
+								<form
+									onSubmit={handleAdoptionSubmit}
+									className="space-y-5 mt-8"
 								>
-									{isSubmitting ? "Submitting..." : "Submit Application"}
-								</Button>
-							</form>
+									<Textarea
+										value={formData.applicationForm}
+										onChange={(e) =>
+											setFormData({
+												...formData,
+												applicationForm: e.target.value,
+											})
+										}
+										placeholder="Why do you want to adopt this dog?"
+										className="w-full text-base rounded-lg placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring p-3"
+										required
+									/>
+									<Button
+										type="submit"
+										className="w-full py-3 font-medium text-base rounded-lg bg-primary text-white hover:bg-primary-dark transition-all duration-300"
+										disabled={isSubmitting}
+									>
+										{isSubmitting ? "Submitting..." : "Submit Application"}
+									</Button>
+								</form>
+							)
 						) : (
 							<div className="mt-8 gap-2 text-muted-foreground w-full flex flex-col ">
 								<p className="text-sm text-card-foreground/20">
