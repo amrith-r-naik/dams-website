@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardFooter,
+	CardTitle,
+} from "@/components/ui/card";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 export default function Adoptions() {
@@ -76,16 +82,23 @@ export default function Adoptions() {
 									<p className="text-sm text-gray-500 mb-2">
 										<strong>Breed:</strong> {adoption.dog.breed.name}
 									</p>
+
 									<p className="text-sm text-gray-500 mb-2">
-										<strong>Description:</strong> {adoption.dog.description}
+										<strong>Shelter:</strong> {adoption.dog.shelter.name}
 									</p>
-									<p className="text-sm text-gray-500 mb-2">
-										<strong>Applicant:</strong> {adoption.user.name}
-									</p>
+
 									<p className="text-sm text-gray-500 mb-4">
 										<strong>Status:</strong> {adoption.status}
 									</p>
 								</CardContent>
+								{adoption.status === "APPROVED" && (
+									<CardFooter>
+										<p className="text-sm text-muted-foreground">
+											Please contact this number :
+											<strong>{adoption.dog.shelter.phoneNumber}</strong>
+										</p>
+									</CardFooter>
+								)}
 							</Card>
 						))}
 					</div>

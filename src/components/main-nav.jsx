@@ -59,7 +59,7 @@ export function MainNav({ className }) {
 					</Button>
 
 					{/* TODO : Remove the breeds page and shift all the necessary options to dog page itself */}
-					<Button
+					{/* <Button
 						variant="ghost"
 						size="sm"
 						className={
@@ -70,7 +70,7 @@ export function MainNav({ className }) {
 						onClick={() => router.push("/dogBreed")}
 					>
 						<p>Breeds</p>
-					</Button>
+					</Button> */}
 
 					{/* Shelters Page button */}
 					<Button
