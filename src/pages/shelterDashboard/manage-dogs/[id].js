@@ -21,6 +21,7 @@ import { X } from "lucide-react";
 export default function UpdateDogPage() {
 	const [dog, setDog] = useState(null);
 	const [breeds, setBreeds] = useState([]);
+	const [errors, setErrors] = useState({});
 	const router = useRouter();
 	const { id } = router.query;
 
@@ -63,12 +64,36 @@ export default function UpdateDogPage() {
 
 	const handleUpdate = async (e) => {
 		e.preventDefault();
-		const res = await fetch(`/api/dogs/${id}`, {
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(dog),
-		});
-		if (res.ok) alert("Dog updated successfully!");
+
+		// Validation
+		const newErrors = {};
+
+		if (!dog.name) {
+			newErrors.name = "Dog name is required.";
+		}
+		if (!dog.age || dog.age <= 0) {
+			newErrors.age = "Age must be a positive number.";
+		}
+		if (!dog.description) {
+			newErrors.description = "Description is required.";
+		}
+		if (!dog.breedId) {
+			newErrors.breed = "Breed must be selected.";
+		}
+		if (!dog.imageUrl || dog.imageUrl.length === 0) {
+			newErrors.image = "At least one image must be uploaded.";
+		}
+
+		setErrors(newErrors);
+
+		if (Object.keys(newErrors).length === 0) {
+			const res = await fetch(`/api/dogs/${id}`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(dog),
+			});
+			if (res.ok) alert("Dog updated successfully!");
+		}
 	};
 
 	const handleDeleteImage = (urlToDelete) => {
@@ -99,6 +124,7 @@ export default function UpdateDogPage() {
 						placeholder="Enter dog's name"
 						className="mt-2"
 					/>
+					{errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
 				</div>
 
 				<div>
@@ -111,6 +137,7 @@ export default function UpdateDogPage() {
 						placeholder="Enter dog's age"
 						className="mt-2"
 					/>
+					{errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
 				</div>
 
 				<div>
@@ -122,6 +149,9 @@ export default function UpdateDogPage() {
 						placeholder="Write a description about the dog"
 						className="mt-2"
 					/>
+					{errors.description && (
+						<p className="text-red-500 text-sm">{errors.description}</p>
+					)}
 				</div>
 
 				<div>
@@ -144,6 +174,9 @@ export default function UpdateDogPage() {
 							))}
 						</SelectContent>
 					</Select>
+					{errors.breed && (
+						<p className="text-red-500 text-sm">{errors.breed}</p>
+					)}
 				</div>
 
 				<div>
@@ -156,6 +189,9 @@ export default function UpdateDogPage() {
 						onChange={handleImageUpload}
 						className="mt-2"
 					/>
+					{errors.image && (
+						<p className="text-red-500 text-sm">{errors.image}</p>
+					)}
 				</div>
 			</div>
 
@@ -195,6 +231,7 @@ export default function UpdateDogPage() {
 		</form>
 	);
 }
+
 UpdateDogPage.getLayout = function getLayout(page) {
 	return <Layout>{page}</Layout>;
 };
