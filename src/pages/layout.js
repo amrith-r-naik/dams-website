@@ -1,6 +1,7 @@
 import React from "react";
 import localFont from "next/font/local";
 import { MainNav } from "@/components/main-nav";
+import Footer from "@/components/footer";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -22,6 +23,7 @@ const Layout = ({ children }) => {
 			>
 				{children}
 			</main>
+			<Footer/>
 		</>
 	);
 };
