@@ -34,7 +34,7 @@ const data = {
 					url: "/shelterDashboard/add-dogs",
 				},
 				{
-					title: "Shelter Details",
+					title: "My Shelter",
 					url: "/shelterDashboard/shelter-details",
 				},
 				{
