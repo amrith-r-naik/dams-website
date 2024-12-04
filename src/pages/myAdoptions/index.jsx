@@ -9,6 +9,7 @@ import {
 import Image from "next/image";
 import { useTheme } from "next-themes";
 
+
 export default function Adoptions() {
 	const [adoptions, setAdoptions] = useState([]);
 	const [error, setError] = useState("");
@@ -45,28 +46,31 @@ export default function Adoptions() {
 		return groups;
 	}, {});
 
-	// Filter out statuses with no content
-	const nonEmptyStatuses = Object.keys(groupedAdoptions).filter(
-		(status) => groupedAdoptions[status].length > 0
-	);
-
 	return (
 		<div className="container mx-auto p-6">
 			<h1 className="text-2xl font-bold mb-4">Adoptions by Status</h1>
 
 			{error && <p className="text-red-500 mb-4">{error}</p>}
 
-			<div
-				className={`grid gap-6`}
-				style={{
-					gridTemplateColumns: `repeat(${nonEmptyStatuses.length}, minmax(0, 1fr))`,
-				}}
-			>
-				{nonEmptyStatuses.map((status) => (
+			<div className="grid gap-6 md:grid-cols-3">
+				{["PENDING", "APPROVED", "REJECTED"].map((status) => (
 					<div key={status} className="flex flex-col space-y-4">
-						<h2 className="text-xl font-semibold text-center">{status}</h2>
-						{groupedAdoptions[status].map((adoption) => (
-							<Card key={adoption.id} className="shadow-md">
+						<h2
+							className={`text-xl font-semibold text-center ${
+								status === "PENDING"
+									? "text-yellow-600"
+									: status === "APPROVED"
+									? "text-green-600"
+									: "text-red-600"
+							}`}
+						>
+							{status}
+						</h2>
+						{(groupedAdoptions[status] || []).map((adoption) => (
+							<Card
+								key={adoption.id}
+								className="shadow-md border border-border rounded-lg transition-transform transform hover:scale-105"
+							>
 								<CardHeader>
 									<CardTitle className="text-lg font-bold">
 										{adoption.dog.name}
@@ -74,9 +78,7 @@ export default function Adoptions() {
 								</CardHeader>
 								<CardContent>
 									<Image
-										src={
-											adoption.dog.imageUrl[0] || "/placeholder-image-dog.png"
-										}
+										src={adoption.dog.imageUrl[0] || "/placeholder-image-dog.png"}
 										alt={adoption.dog.name}
 										width={500}
 										height={500}
@@ -90,18 +92,28 @@ export default function Adoptions() {
 												: "object-cover"
 										}`}
 									/>
-									<p className="text-sm text-gray-500 mb-2">
+									<p className="text-sm mb-2">
 										<strong>Breed:</strong> {adoption.dog.breed.name}
 									</p>
-									<p className="text-sm text-gray-500 mb-2">
+									<p className="text-sm mb-2">
 										<strong>Shelter:</strong> {adoption.dog.shelter.name}
 									</p>
 								</CardContent>
-								{adoption.status === "APPROVED" && (
-									<CardFooter>
-										<p className="text-sm text-muted-foreground">
-											Contact:{" "}
-											<strong>{adoption.dog.shelter.phoneNumber}</strong>
+								{/* Contact Details for APPROVED status */}
+								{status === "APPROVED" && (
+									<CardFooter className="flex flex-col items-start gap-2 p-4 rounded-b-lg">
+										<h3 className="text-base font-semibold">
+											Contact Shelter Staff:
+										</h3>
+										<div className="flex items-center gap-2">
+											
+											<span className="text-sm font-medium">
+												{adoption.dog.shelter.phoneNumber}
+											</span>
+										</div>
+										<p className="text-sm">
+											Please reach out to the shelter staff for further
+											information.
 										</p>
 									</CardFooter>
 								)}
