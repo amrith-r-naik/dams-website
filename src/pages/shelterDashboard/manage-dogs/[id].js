@@ -8,6 +8,8 @@ import {
 	SelectItem,
 	SelectValue,
 } from "@/components/ui/select";
+import Layout from "../layout";
+
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -193,3 +195,6 @@ export default function UpdateDogPage() {
 		</form>
 	);
 }
+UpdateDogPage.getLayout = function getLayout(page) {
+	return <Layout>{page}</Layout>;
+};
