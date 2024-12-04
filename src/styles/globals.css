@@ -4,33 +4,8 @@
 
 @layer base {
 	:root {
-		--background: 50 100% 96%; /* #FEFAE0 */
-		--foreground: 0 2% 20%; /* #342E2E */
-		--card: 50 94% 89%; /* #FAEDCD */
-		--card-foreground: 0 2% 20%; /* #342E2E */
-		--popover: 50 94% 89%; /* #FAEDCD */
-		--popover-foreground: 0 2% 20%; /* #342E2E */
-		--primary: 30 50% 64%; /* #D4A373 */
-		--primary-foreground: 0 0% 100%; /* White for good contrast */
-		--secondary: 72 20% 80%; /* #CCD5AE */
-		--secondary-foreground: 0 2% 20%; /* #342E2E */
-		--muted: 72 20% 90%; /* Slightly lighter than secondary */
-		--muted-foreground: 0 2% 35%; /* Darker for contrast */
-		--accent: 72 60% 88%; /* #E9EDC9 */
-		--accent-foreground: 0 2% 20%; /* #342E2E */
-		--destructive: 0 60% 60%; /* Muted red for errors */
-		--destructive-foreground: 0 0% 98%; /* Near white */
-		--border: 72 20% 80%; /* #CCD5AE */
-		--input: 72 20% 80%; /* #CCD5AE */
-		--ring: 30 50% 64%; /* Matches primary */
-		--chart-1: 45 76% 61%; /* Soft yellow */
-		--chart-2: 145 58% 39%; /* Soft green */
-		--chart-3: 200 37% 24%; /* Slate blue */
-		--chart-4: 30 74% 66%; /* Peach */
-		--chart-5: 15 87% 67%; /* Coral */
-
 		/* New light theme colors */
-		/* --background: 36 39% 88%;
+		--background: 36 39% 88%;
 		--foreground: 36 45% 15%;
 		--primary: 36 45% 70%;
 		--primary-foreground: 36 45% 11%;
@@ -53,7 +28,7 @@
 		--chart-2: 26 36% 34%;
 		--chart-3: 28 40% 40%;
 		--chart-4: 31 41% 48%;
-		--chart-5: 35 43% 53%; */
+		--chart-5: 35 43% 53%;
 
 		--radius: 0.5rem;
 		--sidebar-background: var(--card); /* Matches card background */
