@@ -10,6 +10,11 @@ import {
 } from "@/components/ui/select";
 import Image from "next/image";
 import { useTheme } from "next-themes";
+import {
+	HoverCard,
+	HoverCardContent,
+	HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 export default function Adoptions() {
 	const [adoptions, setAdoptions] = useState([]);
@@ -142,7 +147,16 @@ export default function Adoptions() {
 									{adoption.dog.name}
 								</td>
 								<td className="border border-gray-300 px-4 py-2">
-									{adoption.applicationForm}
+									<HoverCard>
+										<HoverCardTrigger>
+											<div className="w-12 truncate">
+												{adoption.applicationForm}
+											</div>
+										</HoverCardTrigger>
+										<HoverCardContent>
+											{adoption.applicationForm}
+										</HoverCardContent>
+									</HoverCard>
 								</td>
 								<td className="border border-gray-300 px-4 py-2">
 									{adoption.dog.breed.name}
