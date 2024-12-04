@@ -6,11 +6,18 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import Loader from "@/components/ui/loader";
+import {
+	Select,
+	SelectItem,
+	SelectContent,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 const ManageDogsPage = () => {
 	const [dogs, setDogs] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const {theme} =useTheme();
+	const { theme } = useTheme();
 
 	// Fetch dogs
 	useEffect(() => {
@@ -118,7 +125,15 @@ const ManageDogsPage = () => {
 											alt={dog.name}
 											layout="fill"
 											objectFit="cover"
-											className={`w-full h-48 rounded-lg mb-4 ${dog.imageUrl.length===0 && (theme==="dark" || theme==="system") && "invert"} ${dog.imageUrl.length===0 ? "object-contain" : "object-cover"}`}
+											className={`w-full h-48 rounded-lg mb-4 ${
+												dog.imageUrl.length === 0 &&
+												(theme === "dark" || theme === "system") &&
+												"invert"
+											} ${
+												dog.imageUrl.length === 0
+													? "object-contain"
+													: "object-cover"
+											}`}
 										/>
 									</div>
 
@@ -139,16 +154,20 @@ const ManageDogsPage = () => {
 									</div>
 									{/* Status Dropdown */}
 									<div className="mt-2 w-full">
-										<select
-											value={dog.status}
+										<Select
+											value={dog.status} // Bind the selected value to the status
 											onChange={(e) => updateDogStatus(dog.id, e.target.value)}
-											className="w-full p-2 bg-black border rounded"
 										>
-											<option value="AVAILABLE">AVAILABLE</option>
-											<option value="UNAVAILABLE">UNAVAILABLE</option>
-											<option value="ADOPTED">ADOPTED</option>
-											<option value="DECEASED">DECEASED</option>
-										</select>
+											<SelectTrigger>
+												<SelectValue placeholder="Select Status" />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectItem value="AVAILABLE">AVAILABLE</SelectItem>
+												<SelectItem value="UNAVAILABLE">UNAVAILABLE</SelectItem>
+												<SelectItem value="ADOPTED">ADOPTED</SelectItem>
+												<SelectItem value="DECEASED">DECEASED</SelectItem>
+											</SelectContent>
+										</Select>
 									</div>
 
 									{/* Delete Button */}
@@ -163,7 +182,7 @@ const ManageDogsPage = () => {
 										href={`/shelterDashboard/manage-dogs/${dog.id}`}
 										className="text-primary hover:underline mt-2 block text-center"
 									>
-										View More
+										Edit dog details
 									</Link>
 								</div>
 							))

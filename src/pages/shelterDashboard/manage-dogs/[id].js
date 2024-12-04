@@ -8,6 +8,8 @@ import {
 	SelectItem,
 	SelectValue,
 } from "@/components/ui/select";
+import Layout from "../layout";
+
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -84,73 +86,93 @@ export default function UpdateDogPage() {
 		);
 
 	return (
-		<form onSubmit={handleUpdate} className="p-6 space-y-6">
-			<h1 className="text-2xl font-bold">Update Dog</h1>
+		<form onSubmit={handleUpdate} className="p-6 space-y-6 max-w-3xl mx-auto">
+			<h1 className="text-2xl font-bold text-center mb-6">Update Dog</h1>
 
-			<Label htmlFor="name">Dog Name</Label>
-			<Input
-				id="name"
-				value={dog.name}
-				onChange={(e) => setDog({ ...dog, name: e.target.value })}
-				placeholder="Enter dog's name"
-			/>
+			<div className="space-y-4">
+				<div>
+					<Label htmlFor="name">Dog Name</Label>
+					<Input
+						id="name"
+						value={dog.name}
+						onChange={(e) => setDog({ ...dog, name: e.target.value })}
+						placeholder="Enter dog's name"
+						className="mt-2"
+					/>
+				</div>
 
-			<Label htmlFor="age">Age</Label>
-			<Input
-				id="age"
-				type="number"
-				value={dog.age}
-				onChange={(e) => setDog({ ...dog, age: parseInt(e.target.value) })}
-				placeholder="Enter dog's age"
-			/>
+				<div>
+					<Label htmlFor="age">Age</Label>
+					<Input
+						id="age"
+						type="number"
+						value={dog.age}
+						onChange={(e) => setDog({ ...dog, age: parseInt(e.target.value) })}
+						placeholder="Enter dog's age"
+						className="mt-2"
+					/>
+				</div>
 
-			<Label htmlFor="description">Description</Label>
-			<Textarea
-				id="description"
-				value={dog.description}
-				onChange={(e) => setDog({ ...dog, description: e.target.value })}
-				placeholder="Write a description about the dog"
-			/>
+				<div>
+					<Label htmlFor="description">Description</Label>
+					<Textarea
+						id="description"
+						value={dog.description}
+						onChange={(e) => setDog({ ...dog, description: e.target.value })}
+						placeholder="Write a description about the dog"
+						className="mt-2"
+					/>
+				</div>
 
-			<Label htmlFor="breed">Breed</Label>
-			<Select
-				onValueChange={(value) => setDog({ ...dog, breedId: parseInt(value) })}
-				defaultValue={dog.breedId || ""}
-			>
-				<SelectTrigger>
-					<SelectValue placeholder="Select a breed" />
-				</SelectTrigger>
-				<SelectContent>
-					{breeds.map((breed) => (
-						<SelectItem key={breed.id} value={breed.id.toString()}>
-							{breed.name}
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
+				<div>
+					<Label htmlFor="breed">Breed</Label>
+					<Select
+						onValueChange={(value) =>
+							setDog({ ...dog, breedId: parseInt(value) })
+						}
+						defaultValue={dog.breedId || ""}
+						className="mt-2"
+					>
+						<SelectTrigger>
+							<SelectValue placeholder="Select a breed" />
+						</SelectTrigger>
+						<SelectContent>
+							{breeds.map((breed) => (
+								<SelectItem key={breed.id} value={breed.id.toString()}>
+									{breed.name}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
 
-			<Label htmlFor="image">Upload Images</Label>
-			<Input
-				id="image"
-				type="file"
-				multiple
-				accept="image/*"
-				onChange={handleImageUpload}
-			/>
+				<div>
+					<Label htmlFor="image">Upload Images</Label>
+					<Input
+						id="image"
+						type="file"
+						multiple
+						accept="image/*"
+						onChange={handleImageUpload}
+						className="mt-2"
+					/>
+				</div>
+			</div>
 
-			<div className="mt-4">
-				<h3 className="text-lg font-medium">Uploaded Images:</h3>
+			<div className="mt-6">
+				<h3 className="text-lg font-medium mb-2">Uploaded Images:</h3>
 				<div className="flex gap-4 flex-wrap">
 					{dog.imageUrl.map((url, index) => (
 						<Card
 							key={index}
-							className="relative w-[100px] h-[100px] border rounded-lg overflow-hidden"
+							className="relative w-[120px] h-[120px] border rounded-lg overflow-hidden"
 						>
 							<Image
 								src={url}
 								alt={`Uploaded ${index}`}
 								layout="fill"
 								objectFit="cover"
+								className="rounded-md"
 							/>
 							<Button
 								variant="ghost"
@@ -165,9 +187,14 @@ export default function UpdateDogPage() {
 				</div>
 			</div>
 
-			<Button type="submit" variant="primary">
-				Update Dog
-			</Button>
+			<div className="flex justify-center mt-8">
+				<Button type="submit" className="w-full max-w-[200px]">
+					Update Dog
+				</Button>
+			</div>
 		</form>
 	);
 }
+UpdateDogPage.getLayout = function getLayout(page) {
+	return <Layout>{page}</Layout>;
+};

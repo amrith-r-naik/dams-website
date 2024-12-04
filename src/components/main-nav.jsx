@@ -10,10 +10,11 @@ import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
-import { Heart, Home, PawPrint } from "lucide-react";
+import { Heart, Home, PawPrint, Menu, X } from "lucide-react"; // Add icons for menu toggle
 
 export function MainNav({ className }) {
 	const [isLoading, setIsLoading] = useState(false);
+	const [isMenuOpen, setIsMenuOpen] = useState(false); // State for toggling menu
 	const pathname = usePathname();
 	const router = useRouter();
 	const { data: session } = useSession();
@@ -43,8 +44,23 @@ export function MainNav({ className }) {
 					</span>
 				</Link>
 
-				{/* Navigation menu*/}
-				<nav className="flex items-center gap-8 text-sm xl:gap-8">
+				{/* Hamburger Menu Icon for mobile */}
+				<div className="lg:hidden">
+					<Button
+						variant="ghost"
+						size="sm"
+						onClick={() => setIsMenuOpen(!isMenuOpen)}
+					>
+						{isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+					</Button>
+				</div>
+
+				{/* Navigation menu */}
+				<nav
+					className={`${
+						isMenuOpen ? "block" : "hidden"
+					} lg:flex items-center gap-8 text-sm xl:gap-8`}
+				>
 					{/* Dogs page button */}
 					<Button
 						variant="ghost"
@@ -56,20 +72,6 @@ export function MainNav({ className }) {
 					>
 						<PawPrint size={16} />
 						<p>Dogs</p>
-					</Button>
-
-					{/* TODO : Remove the breeds page and shift all the necessary options to dog page itself */}
-					<Button
-						variant="ghost"
-						size="sm"
-						className={
-							pathname === "/dogBreed"
-								? "text-primary"
-								: "text-muted-foreground"
-						}
-						onClick={() => router.push("/dogBreed")}
-					>
-						<p>Breeds</p>
 					</Button>
 
 					{/* Shelters Page button */}
@@ -104,34 +106,6 @@ export function MainNav({ className }) {
 						</Button>
 					)}
 
-					{/* Shelter Dashboard Page Button */}
-					{session?.user?.role === "SHELTER_STAFF" && (
-						<Link
-							href="/shelterDashboard"
-							className={cn(
-								"transition-colors hover:text-primary hover:border-primary border border-secondary rounded-full px-3 py-1",
-								pathname?.startsWith("/shelterDashboard")
-									? "text-primary"
-									: "text-accent"
-							)}
-						>
-							Dashboard
-						</Link>
-					)}
-					{/* Shelter Dashboard Page Button */}
-					{session?.user?.role === "USER" && (
-						<Link
-							href="/userDashboard"
-							className={cn(
-								"transition-colors hover:text-primary hover:border-primary border border-secondary rounded-full px-3 py-1",
-								pathname?.startsWith("/userDashboard")
-									? "text-primary"
-									: "text-accent"
-							)}
-						>
-							Dashboard
-						</Link>
-					)}
 					{/* My adoptions Page Button */}
 					{session && (
 						<Button
@@ -147,9 +121,39 @@ export function MainNav({ className }) {
 							<p>My Adoptions</p>
 						</Button>
 					)}
+
+					{/* Shelter Dashboard Page Button */}
+					{session?.user?.role === "SHELTER_STAFF" && (
+						<Link
+							href="/shelterDashboard"
+							className={cn(
+								"transition-colors hover:text-primary hover:border-primary border border-secondary rounded-full px-3 py-1",
+								pathname?.startsWith("/shelterDashboard")
+									? "text-primary"
+									: "text-accent"
+							)}
+						>
+							Dashboard
+						</Link>
+					)}
+
+					{/* User Dashboard Page Button */}
+					{session?.user?.role === "USER" && (
+						<Link
+							href="/userDashboard"
+							className={cn(
+								"transition-colors hover:text-primary hover:border-primary border border-secondary rounded-full px-3 py-1",
+								pathname?.startsWith("/userDashboard")
+									? "text-primary"
+									: "text-accent"
+							)}
+						>
+							Dashboard
+						</Link>
+					)}
 				</nav>
 
-				{/* Theme toggle button and sign-in/logout button*/}
+				{/* Theme toggle button and sign-in/logout button */}
 				<div className="flex items-center gap-4">
 					<ThemeToggle />
 					{session ? (

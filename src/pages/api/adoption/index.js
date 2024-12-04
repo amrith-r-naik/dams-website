@@ -44,6 +44,7 @@ export default async function handler(req, res) {
 						dog: {
 							include: {
 								breed: true,
+								shelter: true,
 							},
 						},
 						user: true,

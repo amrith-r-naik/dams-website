@@ -110,7 +110,11 @@ export default function DogDetail({ dog }) {
 							<h3 className="font-bold text-accent">Shelter Information</h3>
 							<p>
 								<strong className="text-primary">Name:</strong>{" "}
-								{dog.shelter?.name}
+								<button
+									onClick={() => router.push(`/shelters/${dog.shelter.id}`)}
+								>
+									{dog.shelter?.name}
+								</button>
 							</p>
 							<p>
 								<strong className="text-primary">Address:</strong>{" "}

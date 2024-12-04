@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardFooter,
+	CardTitle,
+} from "@/components/ui/card";
 import Image from "next/image";
 import { useTheme } from "next-themes";
+
 export default function Adoptions() {
 	const [adoptions, setAdoptions] = useState([]);
 	const [error, setError] = useState("");
@@ -38,16 +45,26 @@ export default function Adoptions() {
 		return groups;
 	}, {});
 
+	// Filter out statuses with no content
+	const nonEmptyStatuses = Object.keys(groupedAdoptions).filter(
+		(status) => groupedAdoptions[status].length > 0
+	);
+
 	return (
 		<div className="container mx-auto p-6">
 			<h1 className="text-2xl font-bold mb-4">Adoptions by Status</h1>
 
 			{error && <p className="text-red-500 mb-4">{error}</p>}
 
-			{Object.keys(groupedAdoptions).map((status) => (
-				<div key={status} className="mb-8">
-					<h2 className="text-xl font-semibold mb-4">{status}</h2>
-					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+			<div
+				className={`grid gap-6`}
+				style={{
+					gridTemplateColumns: `repeat(${nonEmptyStatuses.length}, minmax(0, 1fr))`,
+				}}
+			>
+				{nonEmptyStatuses.map((status) => (
+					<div key={status} className="flex flex-col space-y-4">
+						<h2 className="text-xl font-semibold text-center">{status}</h2>
 						{groupedAdoptions[status].map((adoption) => (
 							<Card key={adoption.id} className="shadow-md">
 								<CardHeader>
@@ -77,20 +94,22 @@ export default function Adoptions() {
 										<strong>Breed:</strong> {adoption.dog.breed.name}
 									</p>
 									<p className="text-sm text-gray-500 mb-2">
-										<strong>Description:</strong> {adoption.dog.description}
-									</p>
-									<p className="text-sm text-gray-500 mb-2">
-										<strong>Applicant:</strong> {adoption.user.name}
-									</p>
-									<p className="text-sm text-gray-500 mb-4">
-										<strong>Status:</strong> {adoption.status}
+										<strong>Shelter:</strong> {adoption.dog.shelter.name}
 									</p>
 								</CardContent>
+								{adoption.status === "APPROVED" && (
+									<CardFooter>
+										<p className="text-sm text-muted-foreground">
+											Contact:{" "}
+											<strong>{adoption.dog.shelter.phoneNumber}</strong>
+										</p>
+									</CardFooter>
+								)}
 							</Card>
 						))}
 					</div>
-				</div>
-			))}
+				))}
+			</div>
 		</div>
 	);
 }
