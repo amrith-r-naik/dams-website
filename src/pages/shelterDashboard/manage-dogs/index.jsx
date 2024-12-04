@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../layout";
 import Image from "next/image";
-import { Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
 import Loader from "@/components/ui/loader";
 import {
@@ -13,11 +13,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 
 const ManageDogsPage = () => {
 	const [dogs, setDogs] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const { theme } = useTheme();
+	const router = useRouter();
 
 	// Fetch dogs
 	useEffect(() => {
@@ -103,9 +105,8 @@ const ManageDogsPage = () => {
 			{groupedDogs.map((group) => (
 				<div key={group.status} className="mb-8">
 					{/* Status Heading */}
-					<h2 className="text-lg font-semibold text-card-foreground mb-4">
-						{group.status}
-					</h2>
+					<h2 className="font-semibold text-secondary">{group.status}</h2>
+					<Separator className="mb-4" />
 					{/* Dog Cards */}
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 						{group.dogs.length === 0 ? (
@@ -153,37 +154,48 @@ const ManageDogsPage = () => {
 										</p>
 									</div>
 									{/* Status Dropdown */}
-									<div className="mt-2 w-full">
-										<Select
-											value={dog.status} // Bind the selected value to the status
-											onChange={(e) => updateDogStatus(dog.id, e.target.value)}
-										>
-											<SelectTrigger>
-												<SelectValue placeholder="Select Status" />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectItem value="AVAILABLE">AVAILABLE</SelectItem>
-												<SelectItem value="UNAVAILABLE">UNAVAILABLE</SelectItem>
-												<SelectItem value="ADOPTED">ADOPTED</SelectItem>
-												<SelectItem value="DECEASED">DECEASED</SelectItem>
-											</SelectContent>
-										</Select>
-									</div>
+									<div className="mt-2 w-full flex flex-col gap-2">
+										<div>
+											<p>Status</p>
+											<Select
+												value={dog.status} // Bind the selected value to the status
+												onChange={(e) =>
+													updateDogStatus(dog.id, e.target.value)
+												}
+											>
+												<SelectTrigger>
+													<SelectValue placeholder="Select Status" />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectItem value="AVAILABLE">AVAILABLE</SelectItem>
+													<SelectItem value="UNAVAILABLE">
+														UNAVAILABLE
+													</SelectItem>
+													<SelectItem value="ADOPTED">ADOPTED</SelectItem>
+													<SelectItem value="DECEASED">DECEASED</SelectItem>
+												</SelectContent>
+											</Select>
+										</div>
 
-									{/* Delete Button */}
-									<Button
-										variant="destructive"
-										onClick={() => deleteDog(dog.id)}
-										className="w-full"
-									>
-										<Trash2 size={16} /> Delete Dog
-									</Button>
-									<Link
-										href={`/shelterDashboard/manage-dogs/${dog.id}`}
-										className="text-primary hover:underline mt-2 block text-center"
-									>
-										Edit dog details
-									</Link>
+										<Button
+											variant="secondary"
+											onClick={() =>
+												router.push(`/shelterDashboard/manage-dogs/${dog.id}`)
+											}
+										>
+											<Pencil size={16} />
+											Edit dog details
+										</Button>
+
+										{/* Delete Button */}
+										<Button
+											variant="destructive"
+											onClick={() => deleteDog(dog.id)}
+											className="w-full"
+										>
+											<Trash2 size={16} /> Delete Dog
+										</Button>
+									</div>
 								</div>
 							))
 						)}
