@@ -10,7 +10,7 @@ import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
-import { Heart, Home, PawPrint, Menu, X } from "lucide-react"; // Add icons for menu toggle
+import { Heart, Home, PawPrint, Menu, X, File } from "lucide-react"; // Add icons for menu toggle
 
 export function MainNav({ className }) {
 	const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +35,7 @@ export function MainNav({ className }) {
 				className
 			)}
 		>
-			<div className="max-w-[80%] mx-auto flex justify-between items-center px-6 py-1">
+			<div className="max-w-[95%] mx-auto flex justify-between items-center px-6 py-1">
 				{/* Logo */}
 				<Link href="/" className="flex items-center space-x-2">
 					<Icons.logo className="h-10 w-10" />
@@ -118,6 +118,7 @@ export function MainNav({ className }) {
 							}
 							onClick={() => router.push("/myAdoptions")}
 						>
+							<File size={16} />
 							<p>My Adoptions</p>
 						</Button>
 					)}
