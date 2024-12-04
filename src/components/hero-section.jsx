@@ -125,7 +125,45 @@ const HeroSection = () => {
 					with shelters and adoption agencies, we connect furry friends with
 					loving homes. Every adoption makes a lasting difference.
 				</p>
-				
+			</section>
+
+			{/* Adoption process Section */}
+			<section
+				id="adoption-process"
+				className="w-full h-screen px-32 py-20 flex flex-col items-center justify-center text-center bg-gradient-to-br"
+			>
+				<h2
+					className="text-5xl font-extrabold mb-6"
+					style={{ color: "#D4A373" }}
+				>
+					How to Apply for a Dog Adoption
+				</h2>
+				<ul className="text-lg max-w-3xl leading-relaxed space-y-4 text-left">
+					<li>
+						<strong>Step 1:</strong> Browse our available dogs on the website
+						and select the one your interested in adopting.
+					</li>
+					<li>
+						<strong>Step 2:</strong> Click on the Apply for Adoption button on
+						the dogs profile page.
+					</li>
+					<li>
+						<strong>Step 3:</strong> Fill out the adoption application form with
+						accurate and detailed information.
+					</li>
+					<li>
+						<strong>Step 4:</strong> Submit the form and wait for our team to
+						review your application.
+					</li>
+					<li>
+						<strong>Step 5:</strong> Contact the shelter using the details
+						provided after approval. They will guide you through the next steps.
+					</li>
+					<li>
+						<strong>Step 6:</strong> Finalize the adoption agreement and bring
+						your new furry friend home!
+					</li>
+				</ul>
 			</section>
 
 			{/* Contact Us Section */}
@@ -133,13 +171,16 @@ const HeroSection = () => {
 				id="contact"
 				className="w-full h-screen px-32 py-20 flex flex-col items-center justify-center text-center"
 			>
-				<h2 className="text-5xl font-extrabold mb-6" style={{ color: "#D4A373" }}>
+				<h2
+					className="text-5xl font-extrabold mb-6"
+					style={{ color: "#D4A373" }}
+				>
 					Contact Us
 				</h2>
 				<p className="text-lg max-w-3xl mb-8 leading-relaxed">
-					Have questions or want to join our mission? Feel free to get in
-					touch. We’d love to hear from you and guide you toward the right
-					adoption choice.
+					Have questions or want to join our mission? Feel free to get in touch.
+					We’d love to hear from you and guide you toward the right adoption
+					choice.
 				</p>
 				<div className="p-6 rounded-lg shadow-2xl max-w-lg w-full space-y-4">
 					<p>
