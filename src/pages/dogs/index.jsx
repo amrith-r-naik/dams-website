@@ -172,7 +172,6 @@ const DogsPage = () => {
 						<p className="text-lg font-medium text-muted-foreground">
 							🐾 No Dogs Found
 						</p>
-						
 					</div>
 				)}
 				{filteredDogs.map((dog) => (
@@ -186,7 +185,9 @@ const DogsPage = () => {
 							width={500}
 							height={500}
 							className={`w-full h-48 rounded-lg mb-4 ${
-								dog.imageUrl.length === 0 && (theme === "dark" || theme === "system") && "invert"
+								dog.imageUrl.length === 0 &&
+								(theme === "dark" || theme === "system") &&
+								"invert"
 							} ${
 								dog.imageUrl.length === 0 ? "object-contain" : "object-cover"
 							}`}
@@ -220,7 +221,7 @@ const DogsPage = () => {
 								onClick={() => router.push(`/dogs/${dog.id}`)}
 								className="text-sm font-medium rounded-lg text-primary hover:underline mt-2 self-start border px-4 py-2"
 							>
-								View More →
+								View Details →
 							</button>
 						</div>
 					</div>
