@@ -157,7 +157,7 @@ const ManageDogsPage = () => {
 									<div className="mt-2 w-full flex flex-col gap-2">
 										<div>
 											<p>Status</p>
-											<Select
+											{/* <Select
 												value={dog.status} // Bind the selected value to the status
 												onChange={(e) =>
 													updateDogStatus(dog.id, e.target.value)
@@ -174,7 +174,21 @@ const ManageDogsPage = () => {
 													<SelectItem value="ADOPTED">ADOPTED</SelectItem>
 													<SelectItem value="DECEASED">DECEASED</SelectItem>
 												</SelectContent>
-											</Select>
+											</Select> */}
+											<div className="mt-2 w-full">
+												<select
+													value={dog.status}
+													onChange={(e) =>
+														updateDogStatus(dog.id, e.target.value)
+													}
+													className="w-full p-2 border rounded"
+												>
+													<option value="AVAILABLE">AVAILABLE</option>
+													<option value="UNAVAILABLE">UNAVAILABLE</option>
+													<option value="ADOPTED">ADOPTED</option>
+													<option value="DECEASED">DECEASED</option>
+												</select>
+											</div>
 										</div>
 
 										<Button
@@ -188,13 +202,13 @@ const ManageDogsPage = () => {
 										</Button>
 
 										{/* Delete Button */}
-										<Button
+										{/* <Button
 											variant="destructive"
 											onClick={() => deleteDog(dog.id)}
 											className="w-full"
 										>
 											<Trash2 size={16} /> Delete Dog
-										</Button>
+										</Button> */}
 									</div>
 								</div>
 							))
